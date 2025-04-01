@@ -22,9 +22,23 @@ namespace MagickCowModManager.Core.Args
                     LongCommand = "help",
                     Arguments = Array.Empty<string>(),
                     Description = "Display this help message.",
-                    Function = null
+                    Function = CmdHelp
                 }
             };
+        }
+
+        private void Print(string msg)
+        {
+            Console.WriteLine(msg);
+        }
+
+        public void CmdHelp(string[] args, int index)
+        {
+            Print($"Usage : mcow-mm [OPTIONS] <ARGS>");
+            foreach (var cmd in this.Commands)
+            {
+                Print($"    -{cmd.ShortCommand}, --{cmd.LongCommand} {cmd.ArgumentsString} {cmd.Description}");
+            }
         }
     }
 }
