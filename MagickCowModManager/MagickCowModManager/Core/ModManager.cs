@@ -14,8 +14,6 @@ namespace MagickCowModManager.Core
 
         private FileHandler handler;
 
-        private List<Profile> profiles;
-
         #endregion
 
         #region Public Properties
@@ -40,7 +38,6 @@ namespace MagickCowModManager.Core
             this.ModsContentPath = modsPath;
             this.GameContentPath = contentPath;
             this.handler = new FileHandler();
-            this.profiles = LoadProfilesFromFiles();
         }
 
         #endregion
@@ -85,36 +82,6 @@ namespace MagickCowModManager.Core
         #endregion
 
         #region PrivateMethods
-
-        private List<Profile> LoadProfilesFromFiles()
-        {
-            DirectoryInfo directoryInfo = new DirectoryInfo(this.ModsContentPath);
-            FileInfo[] fileInfos = directoryInfo.GetFiles();
-
-            List<Profile> foundProfiles = new List<Profile>();
-
-            foreach (var fileInfo in fileInfos)
-            {
-                try
-                {
-                    Profile profile = LoadProfileFromFile(fileInfo.FullName);
-                    foundProfiles.Add(profile);
-                }
-                catch
-                {
-                    // Do nothing, just skip the file if it's not a valid JSON file that matches the ModProfile "schema"...
-                }
-            }
-
-            return foundProfiles;
-        }
-
-        private Profile LoadProfileFromFile(string filePath)
-        {
-            Profile profile = new Profile(filePath);
-            return profile;
-        }
-
         #endregion
     }
 }
