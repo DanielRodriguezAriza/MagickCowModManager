@@ -14,14 +14,20 @@ namespace MagickCowModManager.Core.FileHandling
         private string gameContentPath;
         private Profile profile;
 
+        private List<string> directoriesToInstall;
+        private List<string> filesToInstall;
+
         public CopyFileHandler(Profile profile, string modsContentPath, string gameContentPath)
         {
             this.profile = profile;
             this.modsContentPath = modsContentPath;
             this.gameContentPath = gameContentPath;
+            
+            this.directoriesToInstall = new List<string>();
+            this.filesToInstall = new List<string>();
         }
 
-        public void InstallProfile()
+        public void InstallMods()
         {
             foreach (var modName in this.profile.EnabledMods)
             {
@@ -36,11 +42,41 @@ namespace MagickCowModManager.Core.FileHandling
             ProcessDirectory(originPath, destinationPath);
         }
 
-        private void ProcessDirectory(string origin, string destination)
+        private void ProcessDirectory(string originPath, string destinationPath)
         {
-            DirectoryInfo originInfo = new DirectoryInfo(origin);
-            DirectoryInfo destinationInfo = new DirectoryInfo(destination);
-            ProcessDirectory(originInfo, destinationInfo);
+            DirectoryInfo originInfo = new DirectoryInfo(originPath);
+            DirectoryInfo destinationInfo = new DirectoryInfo(destinationPath);
+
+            RegisterData(originInfo);
+            GenerateData(originInfo, destinationInfo);
+        }
+
+        private void RegisterData(DirectoryInfo origin)
+        {
+            RegisterDirectoryRec("", origin);
+        }
+
+        private void RegisterDirectoryRec(string parent, DirectoryInfo origin)
+        {
+            FileInfo[] files = origin.GetFiles();
+            foreach (var file in files)
+            {
+                var path = Path.Combine(parent, origin.Name);
+                this.filesToInstall.Add(path);
+            }
+
+            DirectoryInfo[] dirs = origin.GetDirectories();
+            foreach (var dir in dirs)
+            {
+                var path = Path.Combine(parent, dir.Name);
+                this.directoriesToInstall.Add(path);
+                RegisterDirectoryRec(path, dir);
+            }
+        }
+
+        private void GenerateData(DirectoryInfo origin, DirectoryInfo destination)
+        {
+
         }
 
         private void ProcessDirectory(DirectoryInfo origin, DirectoryInfo destination)
@@ -73,19 +109,17 @@ namespace MagickCowModManager.Core.FileHandling
             }
         }
 
-        private void ProcessFile(FileInfo fileInfo, DirectoryInfo destination)
+        private void ProcessFile(FileInfo originFileInfo, DirectoryInfo destinationDirectoryInfo)
         {
-            // TODO : Add permission handling in the future or what?
-            // File.CreateSymbolicLink(Path.Combine(destination.FullName, fileInfo.Name), fileInfo.FullName);
-
             bool shouldDeleteFile = false;
             bool shouldCreateFile = false;
 
-            string destinationFileName = Path.Combine(destination.FullName, fileInfo.Name);
+            string originFileName = originFileInfo.FullName;
+            string destinationFileName = Path.Combine(destinationDirectoryInfo.FullName, originFileInfo.Name);
 
             if (File.Exists(destinationFileName))
             {
-                if (!FileContentsAreEqual(fileInfo.FullName, destinationFileName))
+                if (!FileContentsAreEqual(originFileName, destinationFileName))
                 {
                     shouldCreateFile = true;
                     shouldDeleteFile = true;
@@ -97,12 +131,16 @@ namespace MagickCowModManager.Core.FileHandling
             }
 
             if (shouldDeleteFile)
+            {
+                // If an outdated file exists on the destination, delete it.
                 File.Delete(destinationFileName);
+            }
 
             if (shouldCreateFile)
             {
-                Console.WriteLine($"Installing mod file : {fileInfo.FullName}");
-                File.Copy(fileInfo.FullName, destinationFileName); // Shitty, what about heavy files? don't want to copy those... fucking windows I swear...
+                // If the destination doesn't already have installed the origin file, then copy it.
+                Console.WriteLine($"Installing mod file : {originFileName}");
+                File.Copy(originFileName, destinationFileName); // NOTE : Shitty solution, what about heavy files? don't want to copy those... fucking windows I swear...
             }
         }
 

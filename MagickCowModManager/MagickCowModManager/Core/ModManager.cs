@@ -141,7 +141,7 @@ namespace MagickCowModManager.Core
         private void InstallProfile(Profile profile)
         {
             CopyFileHandler handler = new CopyFileHandler(profile, this.ModsContentPath, this.GameContentPath);
-            handler.InstallProfile();
+            handler.InstallMods();
         }
         
         #endregion
