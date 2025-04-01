@@ -83,30 +83,18 @@ namespace MagickCowModManager.Core.FileHandling
 
         private void CleanUpData(DirectoryInfo destination)
         {
-            CleanUpDataRec("", destination);
-        }
+            List<string> dirsToRemove = new List<string>();
+            List<string> filesToRemove = new List<string>();
+            FileSystemHelper.GetChildPathsDiff(destination, this.directoriesToInstall, this.filesToInstall, dirsToRemove, filesToRemove);
 
-        private void CleanUpDataRec(string parent, DirectoryInfo destination)
-        {
-            FileInfo[] files = destination.GetFiles();
-            foreach (var file in files)
+            foreach (var file in filesToRemove)
             {
-                string path = Path.Combine(parent, file.Name);
-                if (!this.filesToInstall.Contains(path))
-                {
-                    File.Delete(file.FullName);
-                }
+                File.Delete(file);
             }
 
-            DirectoryInfo[] dirs = destination.GetDirectories();
-            foreach (var dir in dirs)
+            foreach (var dir in dirsToRemove)
             {
-                string path = Path.Combine(parent, dir.Name);
-                if (!this.directoriesToInstall.Contains(path))
-                {
-                    Directory.Delete(dir.FullName);
-                }
-                CleanUpData(dir);
+                Directory.Delete(dir);
             }
         }
     }
