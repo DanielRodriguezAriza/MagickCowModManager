@@ -190,6 +190,29 @@ namespace MagickCowModManager.Core
             File.Copy(fileInfo.FullName, destinationFileName); // Shitty, what about heavy files? don't want to copy those... fucking windows I swear...
         }
 
+        private bool FileContentsAreEqual(string filePathA, string filePathB)
+        {
+            bool ans = false;
+
+            using (var fileA = File.Open(filePathA, FileMode.Open, FileAccess.Read))
+            using (var fileB = File.Open(filePathB, FileMode.Open, FileAccess.Read))
+            using (var readerA = new BinaryReader(fileA))
+            using (var readerB = new BinaryReader(fileB))
+            {
+                long lengthA = readerA.BaseStream.Length;
+                long lengthB = readerB.BaseStream.Length;
+                
+                if (lengthA == lengthB)
+                {
+                    var bytesA = readerA.ReadBytes((int)lengthA);
+                    var bytesB = readerB.ReadBytes((int)lengthB);
+                    ans = bytesA.AsSpan().SequenceEqual(bytesB); // Supposedly in C# this is almost as fast as calling memcmp in C, so yeah, probably can't get faster than this without calling the CRT directly.
+                }
+            }
+
+            return ans;
+        }
+
         #endregion
     }
 }
