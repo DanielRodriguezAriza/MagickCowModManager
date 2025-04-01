@@ -14,8 +14,8 @@ namespace MagickCowModManager.Core.Args
         public CommandHandler(ModManager modManager)
         {
             this.ModManager = modManager;
-            this.Commands = new Command[]
-            {
+            this.Commands =
+            [
                 new Command
                 {
                     ShortCommand = "h",
@@ -24,7 +24,7 @@ namespace MagickCowModManager.Core.Args
                     Description = "Display this help message.",
                     Function = CmdHelp
                 }
-            };
+            ];
         }
 
         private void Print(string msg)
