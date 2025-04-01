@@ -16,10 +16,19 @@ namespace MagickCowModManager
             {
                 Console.WriteLine($"Load Error : {exception.Message}");
             }
+            catch (ParseException exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
+            catch (CommandException exception)
+            {
+                Console.WriteLine(exception.Message);
+            }
             catch (Exception exception)
             {
-                Console.WriteLine($"Exception : {exception.Message}");
-                Console.WriteLine($"Stack Trace : {exception.StackTrace}");
+                Console.WriteLine($"Unhandled Exception Found!");
+                Console.WriteLine(exception.Message);
+                Console.WriteLine(exception.StackTrace);
             }
         }
     }
