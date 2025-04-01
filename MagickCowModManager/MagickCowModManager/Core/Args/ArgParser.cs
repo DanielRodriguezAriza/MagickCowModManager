@@ -17,7 +17,25 @@ namespace MagickCowModManager.Core.Args
 
         public void Parse(string[] args)
         {
-            // TODO : Implement
+            for (int i = 0; i < args.Length; ++i)
+            {
+                int argsRemaining = args.Length - i - 1;
+                var arg = args[i];
+
+                foreach (var cmd in this.commandHandler.Commands)
+                {
+                    if ($"-{cmd.ShortCommand}" == arg || $"--{cmd.LongCommand}" == arg)
+                    {
+                        if (argsRemaining < cmd.Arguments.Length)
+                        {
+                            throw new Exception($"Not enough arguments found : {cmd.Arguments.Length} were expected, but {argsRemaining} were found!");
+                        }
+                        cmd.Function(args, i);
+                        i += cmd.Arguments.Length; // Consume the arguments as well.
+                        return;
+                    }
+                }
+            }
         }
     }
 }
