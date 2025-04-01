@@ -24,7 +24,7 @@ namespace MagickCowModManager.Core.FileHandling
             FileInfo[] files = origin.GetFiles();
             foreach (var file in files)
             {
-                var path = Path.Combine(parent, origin.Name);
+                var path = Path.Combine(parent, file.Name);
                 foundFiles.Add(path);
             }
 
