@@ -41,6 +41,8 @@ namespace MagickCowModManager.Core.Args
                         return;
                     }
                 }
+
+                throw new Exception($"Unknown argument found : \"{arg}\"");
             }
         }
     }
