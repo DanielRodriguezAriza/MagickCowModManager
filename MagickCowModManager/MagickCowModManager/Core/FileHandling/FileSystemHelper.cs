@@ -8,6 +8,8 @@ namespace MagickCowModManager.Core.FileHandling
 {
     public static class FileSystemHelper
     {
+        #region GetChildPaths
+
         public static void GetChildPaths(string path, List<string> foundDirectories, List<string> foundFiles)
         {
             var pathInfo = new DirectoryInfo(path);
@@ -36,6 +38,47 @@ namespace MagickCowModManager.Core.FileHandling
                 GetChildPathsRec(path, dir, foundDirs, foundFiles);
             }
         }
+
+        #endregion
+
+        #region GetChildPathsDiff
+
+        public static void GetChildPathsDiff(string path, List<string> originFoundDirs, List<string> originFoundFiles, List<string> targetFoundDirs, List<string> targetFoundFiles)
+        {
+            var info = new DirectoryInfo(path);
+            GetChildPathsDiff(info, originFoundDirs, originFoundFiles, targetFoundDirs, targetFoundFiles);
+        }
+
+        public static void GetChildPathsDiff(DirectoryInfo destination, List<string> originFoundDirs, List<string> originFoundFiles, List<string> targetFoundDirs, List<string> targetFoundFiles)
+        {
+            GetChildPathsDiffRec("", destination, originFoundDirs, originFoundFiles, targetFoundDirs, targetFoundFiles);
+        }
+
+        private static void GetChildPathsDiffRec(string parent, DirectoryInfo destination, List<string> originFoundDirs, List<string> originFoundFiles, List<string> targetFoundDirs, List<string> targetFoundFiles)
+        {
+            FileInfo[] files = destination.GetFiles();
+            foreach (var file in files)
+            {
+                string path = Path.Combine(parent, file.Name);
+                if (!originFoundFiles.Contains(path))
+                {
+                    targetFoundFiles.Add(path);
+                }
+            }
+
+            DirectoryInfo[] dirs = destination.GetDirectories();
+            foreach (var dir in dirs)
+            {
+                string path = Path.Combine(parent, dir.Name);
+                if (!originFoundDirs.Contains(path))
+                {
+                    targetFoundDirs.Add(path);
+                }
+                GetChildPathsDiffRec(parent, dir, originFoundDirs, originFoundFiles, targetFoundDirs, targetFoundFiles);
+            }
+        }
+
+        #endregion
 
         public static bool FileContentsAreEqual(string filePathA, string filePathB)
         {
