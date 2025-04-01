@@ -14,6 +14,8 @@ namespace MagickCowModManager.Core
 
         private FileHandler handler;
 
+        private List<Profile> profiles;
+
         #endregion
 
         #region Public Properties
@@ -30,6 +32,7 @@ namespace MagickCowModManager.Core
             this.ModsContentPath = "./Mods";
             this.GameContentPath = "./Content";
             this.handler = new FileHandler();
+            this.profiles = LoadProfilesFromFiles();
         }
 
         public ModManager(string gamePath)
@@ -37,6 +40,7 @@ namespace MagickCowModManager.Core
             this.ModsContentPath = Path.Combine(gamePath, "/Mods");
             this.GameContentPath = Path.Combine(gamePath, "/Content");
             this.handler = new FileHandler();
+            this.profiles = LoadProfilesFromFiles();
         }
 
         public ModManager(string modsPath, string contentPath)
@@ -44,6 +48,7 @@ namespace MagickCowModManager.Core
             this.ModsContentPath = modsPath;
             this.GameContentPath = contentPath;
             this.handler = new FileHandler();
+            this.profiles = LoadProfilesFromFiles();
         }
 
         #endregion
@@ -53,7 +58,7 @@ namespace MagickCowModManager.Core
         // NOTE : Maybe rename to LoadProfile ? The point is that this function basically loads a profile and sets the active mods to be the ones within this profile.
         public void ApplyProfile(string filePath)
         {
-            // TODO : Implement
+            GetProfiles();
         }
 
         public Profile[] GetProfiles()
@@ -88,7 +93,36 @@ namespace MagickCowModManager.Core
         #endregion
 
         #region PrivateMethods
-        #endregion
 
+        private List<Profile> LoadProfilesFromFiles()
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(this.ModsContentPath);
+            FileInfo[] fileInfos = directoryInfo.GetFiles();
+
+            List<Profile> foundProfiles = new List<Profile>();
+
+            foreach (var fileInfo in fileInfos)
+            {
+                try
+                {
+                    Profile profile = LoadProfileFromFile(fileInfo.FullName);
+                    foundProfiles.Add(profile);
+                }
+                catch
+                {
+                    // Do nothing, just skip the file if it's not a valid JSON file that matches the ModProfile "schema"...
+                }
+            }
+
+            return foundProfiles;
+        }
+
+        private Profile LoadProfileFromFile(string filePath)
+        {
+            Profile profile = new Profile(filePath);
+            return profile;
+        }
+
+        #endregion
     }
 }
