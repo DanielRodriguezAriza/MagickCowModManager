@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace MagickCowModManager.Core
 {
-    // TODO : In the future, add some mod profile handling kind of stuff rather than a single mod load order file. For example, have a profile0, profile1, etc... files, each being just a different mod load order file.
     public class ModManager
     {
         #region Private Variables
