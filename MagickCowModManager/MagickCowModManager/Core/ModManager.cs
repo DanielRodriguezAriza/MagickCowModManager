@@ -171,7 +171,7 @@ namespace MagickCowModManager.Core
 
             foreach (var dir in childDirs)
             {
-                var newDir = destination.CreateSubdirectory(Path.Combine(destination.FullName, dir.Name));
+                var newDir = destination.CreateSubdirectory(dir.Name);
                 ProcessDirectory(dir, newDir);
             }
         }
@@ -183,7 +183,11 @@ namespace MagickCowModManager.Core
 
             Console.WriteLine($"Installing mod file : {fileInfo.FullName}");
 
-            File.Copy(fileInfo.FullName, Path.Combine(destination.FullName, fileInfo.Name)); // Shitty, what about heavy files? don't want to copy those... fucking windows I swear...
+            string destinationFileName = Path.Combine(destination.FullName, fileInfo.Name);
+
+            if (File.Exists(destinationFileName))
+                File.Delete(destinationFileName);
+            File.Copy(fileInfo.FullName, destinationFileName); // Shitty, what about heavy files? don't want to copy those... fucking windows I swear...
         }
 
         #endregion
