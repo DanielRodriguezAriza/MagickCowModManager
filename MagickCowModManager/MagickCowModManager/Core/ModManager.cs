@@ -66,21 +66,30 @@ namespace MagickCowModManager.Core
 
         public void ListProfiles()
         {
-            Console.WriteLine("Profiles:");
             var profiles = GetProfiles();
+
+            Console.WriteLine("Profiles:");
+            Console.WriteLine($"  - Found: {profiles.Length}");
+            
             foreach (var profile in profiles)
             {
-                Console.WriteLine($" - {profile.Name}");
+                Console.WriteLine($"    * {profile.Name}");
             }
         }
 
         public void ListMods()
         {
             // TODO : Maybe improve this implementation by actually making a real Mod or ModDirectory or whatever kind of struct with info about the mods? Like name, path, etc...
-            Console.WriteLine("Mods:");
             DirectoryInfo info = new DirectoryInfo(ModsContentPath);
-            foreach(var mod in info.GetDirectories())
-                Console.WriteLine($" - {mod.Name}");
+            DirectoryInfo[] childDirectories = info.GetDirectories();
+
+            Console.WriteLine("Mods:");
+            Console.WriteLine($"  - Found: {childDirectories.Length}");
+
+            foreach (var mod in childDirectories)
+            {
+                Console.WriteLine($"    * {mod.Name}");
+            }
         }
 
         public Profile[] GetProfiles()
