@@ -181,13 +181,32 @@ namespace MagickCowModManager.Core
             // TODO : Add permission handling in the future or what?
             // File.CreateSymbolicLink(Path.Combine(destination.FullName, fileInfo.Name), fileInfo.FullName);
 
-            Console.WriteLine($"Installing mod file : {fileInfo.FullName}");
+            bool shouldDeleteFile = false;
+            bool shouldCreateFile = false;
 
             string destinationFileName = Path.Combine(destination.FullName, fileInfo.Name);
 
             if (File.Exists(destinationFileName))
+            {
+                if (!FileContentsAreEqual(fileInfo.FullName, destinationFileName))
+                {
+                    shouldCreateFile = true;
+                    shouldDeleteFile = true;
+                }
+            }
+            else
+            {
+                shouldCreateFile = true;
+            }
+
+            if(shouldDeleteFile)
                 File.Delete(destinationFileName);
-            File.Copy(fileInfo.FullName, destinationFileName); // Shitty, what about heavy files? don't want to copy those... fucking windows I swear...
+
+            if (shouldCreateFile)
+            {
+                Console.WriteLine($"Installing mod file : {fileInfo.FullName}");
+                File.Copy(fileInfo.FullName, destinationFileName); // Shitty, what about heavy files? don't want to copy those... fucking windows I swear...
+            }
         }
 
         private bool FileContentsAreEqual(string filePathA, string filePathB)
@@ -206,7 +225,13 @@ namespace MagickCowModManager.Core
                 {
                     var bytesA = readerA.ReadBytes((int)lengthA);
                     var bytesB = readerB.ReadBytes((int)lengthB);
-                    ans = bytesA.AsSpan().SequenceEqual(bytesB); // Supposedly in C# this is almost as fast as calling memcmp in C, so yeah, probably can't get faster than this without calling the CRT directly.
+                    if (bytesA.AsSpan().SequenceEqual(bytesB))
+                        ans = true; // Supposedly in C# this is almost as fast as calling memcmp in C, so yeah, probably can't get faster than this without calling the CRT directly.
+                    
+                    // Btw, yes, I know, i could just say ans = bytesA.AsSpan().SequenceEquals(bytesB).... But not really... because that fails in windows 11
+                    // for some fucking stupid reason! So the "if(...) ans = true;" is a fucking hack that I need to use to work on that piece of trash OS.
+                    // Why? who knows! But hopefully they'll fix that in a future update!
+                    // "When?" you may ask! Who the fuck knows!
                 }
             }
 
