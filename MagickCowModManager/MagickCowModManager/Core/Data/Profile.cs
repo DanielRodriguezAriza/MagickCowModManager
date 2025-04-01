@@ -8,21 +8,21 @@ namespace MagickCowModManager.Core.Data
 {
     // Describes a mod profile, with a list of the mods enabled for this given profile.
     // NOTE : The profile name is given by the string of the file, so no need to store it internally in here within this class / struct.
-    public struct ModProfileData
+    public struct Profile
     {
         public List<string> EnabledMods { get; set; }
 
-        public ModProfileData()
+        public Profile()
         {
             this.EnabledMods = new List<string>();
         }
 
-        public ModProfileData(List<string> enabledMods)
+        public Profile(List<string> enabledMods)
         {
             this.EnabledMods = new List<string>(enabledMods);
         }
 
-        public ModProfileData(string[] enabledMods)
+        public Profile(string[] enabledMods)
         {
             this.EnabledMods = new List<string>(enabledMods);
         }
