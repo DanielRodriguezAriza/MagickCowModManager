@@ -41,8 +41,8 @@ namespace MagickCowModManager.Core
             this.GameContentPath = contentPath;
             this.handler = new FileHandler();
 
-            Console.WriteLine($"Mods Content Path : {this.ModsContentPath}");
-            Console.WriteLine($"Game Content Path : {this.GameContentPath}");
+            // Console.WriteLine($"Mods Content Path : {this.ModsContentPath}");
+            // Console.WriteLine($"Game Content Path : {this.GameContentPath}");
         }
 
         #endregion
