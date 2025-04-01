@@ -37,7 +37,7 @@ namespace MagickCowModManager.Core.Args
             Print($"Usage : mcow-mm [OPTIONS] <ARGS>");
             foreach (var cmd in this.Commands)
             {
-                Print($"    -{cmd.ShortCommand}, --{cmd.LongCommand} {cmd.ArgumentsString} {cmd.Description}");
+                Print($"    -{cmd.ShortCommand}, --{cmd.LongCommand} {cmd.ArgumentsString}{cmd.Description}");
             }
         }
     }

@@ -24,7 +24,7 @@ namespace MagickCowModManager.Core.Args
                 {
                     argsString += $"<{arg}> ";
                 }
-                return argsString.Trim();
+                return argsString; // NOTE : We could trim this to remove the last space, but we don't for now. This is because the help command exploits the extra space for pretty printing.
             }
         }
     }
