@@ -8,23 +8,11 @@ namespace MagickCowModManager.Core.Args
 {
     public class ArgParser
     {
-        private ModManager modManager; // Reference to the mod manager instance itself.
-        private Command[] commands; // List of known commands.
+        private CommandHandler commandHandler; // Reference to a command handler instance.
 
         public ArgParser(ModManager modManager)
         {
-            this.modManager = modManager;
-            this.commands = new Command[]
-            {
-                new Command
-                {
-                    ShortCommand = "h",
-                    LongCommand = "help",
-                    Arguments = Array.Empty<string>(),
-                    Description = "Display this help message.",
-                    Function = null
-                }
-            };
+            this.commandHandler = new CommandHandler(modManager);
         }
 
         public void Parse(string[] args)
