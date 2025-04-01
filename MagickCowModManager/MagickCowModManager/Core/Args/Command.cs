@@ -13,5 +13,19 @@ namespace MagickCowModManager.Core.Args
         public string[] Arguments { get; set; }
         public string Description { get; set; }
         public Action<string[], int> Function { get; set; }
+
+        // Helper getter to get the Arguments as a single string
+        public string ArgumentsString
+        {
+            get
+            {
+                string argsString = "";
+                foreach (var arg in this.Arguments)
+                {
+                    argsString += $"<{arg}> ";
+                }
+                return argsString.Trim();
+            }
+        }
     }
 }
