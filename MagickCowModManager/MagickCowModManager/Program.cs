@@ -1,4 +1,5 @@
 ﻿using MagickCowModManager.Core;
+using MagickCowModManager.Core.Exceptions;
 
 namespace MagickCowModManager
 {
@@ -22,8 +23,15 @@ namespace MagickCowModManager
                 return;
             }
 
-            ModManager modManager = new ModManager(args[0]);
-            modManager.ApplyProfile(args[1]);
+            try
+            {
+                ModManager modManager = new ModManager(args[0]);
+                modManager.ApplyProfile(args[1]);
+            }
+            catch (LoadException exception)
+            {
+                Console.WriteLine($"Load Error : {exception.Message}");
+            }
         }
     }
 }
