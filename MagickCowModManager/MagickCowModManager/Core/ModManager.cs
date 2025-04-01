@@ -28,20 +28,12 @@ namespace MagickCowModManager.Core
         #region Constructors
 
         public ModManager()
-        {
-            this.ModsContentPath = "./Mods";
-            this.GameContentPath = "./Content";
-            this.handler = new FileHandler();
-            this.profiles = LoadProfilesFromFiles();
-        }
+        : this("./Mods", "./Content")
+        { }
 
         public ModManager(string gamePath)
-        {
-            this.ModsContentPath = Path.Combine(gamePath, "/Mods");
-            this.GameContentPath = Path.Combine(gamePath, "/Content");
-            this.handler = new FileHandler();
-            this.profiles = LoadProfilesFromFiles();
-        }
+        : this(Path.Combine(gamePath, "/Mods"), Path.Combine(gamePath, "/Content"))
+        { }
 
         public ModManager(string modsPath, string contentPath)
         {
