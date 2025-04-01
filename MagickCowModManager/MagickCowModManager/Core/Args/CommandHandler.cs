@@ -116,6 +116,15 @@ namespace MagickCowModManager.Core.Args
 
             this.ModManager.ModsContentPath = this.modsContentPath;
             this.ModManager.GameContentPath = this.gameContentPath;
+
+            if (this.cmdListMods)
+                this.ModManager.ListMods();
+
+            if (this.cmdListProfiles)
+                this.ModManager.ListProfiles();
+
+            if(this.cmdApplyProfile)
+                this.ModManager.ApplyProfile(this.profile);
         }
 
         #endregion
