@@ -55,27 +55,18 @@ namespace MagickCowModManager.Core
             // TODO : Implement
         }
 
-        #endregion
-
-        #region PrivateMethods
-
-        private void ReadModLoadOrder(string path)
-        {
-            File.Open(path, FileMode.Open, FileAccess.Read);
-        }
-
-        private ModProfile[] GetProfiles()
+        public Profile[] GetProfiles()
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(this.ModsContentPath);
             FileInfo[] fileInfos = directoryInfo.GetFiles();
 
-            List<ModProfile> foundProfiles = new List<ModProfile>();
+            List<Profile> foundProfiles = new List<Profile>();
 
             foreach (var fileInfo in fileInfos)
             {
                 try
                 {
-                    ModProfile profile = GetProfile(fileInfo.FullName);
+                    Profile profile = GetProfile(fileInfo.FullName);
                     foundProfiles.Add(profile);
                 }
                 catch
@@ -87,10 +78,19 @@ namespace MagickCowModManager.Core
             return foundProfiles.ToArray();
         }
 
-        private ModProfile GetProfile(string filePath)
+        public Profile GetProfile(string filePath)
         {
-            string json = File.ReadAllText(filePath);
-            var profileData = JsonSerializer.Deserialize<ModProfileData>(json);
+            Profile profile = new Profile(filePath);
+            return profile;
+        }
+
+        #endregion
+
+        #region PrivateMethods
+
+        private void ReadModLoadOrder(string path)
+        {
+            File.Open(path, FileMode.Open, FileAccess.Read);
         }
 
         #endregion
