@@ -8,8 +8,20 @@ namespace MagickCowModManager.Core.Args
 {
     public class CommandHandler
     {
+        #region Variables
+
         public ModManager ModManager { get; set; } // Reference to a mod manager instance.
         public Command[] Commands { get; set; } // List of known commands.
+
+        #endregion
+
+        #region Command Variables
+
+
+
+        #endregion
+
+        #region Constructor
 
         public CommandHandler(ModManager modManager)
         {
@@ -27,10 +39,18 @@ namespace MagickCowModManager.Core.Args
             ];
         }
 
+        #endregion
+
+        #region Private Methods - Logging
+
         private void Print(string msg)
         {
             Console.WriteLine(msg);
         }
+
+        #endregion
+
+        #region Private Methods - Cmd
 
         public void CmdHelp(string[] args, int index)
         {
@@ -40,5 +60,7 @@ namespace MagickCowModManager.Core.Args
                 Print($"    -{cmd.ShortCommand}, --{cmd.LongCommand} {cmd.ArgumentsString}{cmd.Description}");
             }
         }
+
+        #endregion
     }
 }
