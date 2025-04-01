@@ -64,6 +64,25 @@ namespace MagickCowModManager.Core
             throw new LoadException($"The profile \"{profileName}\" could not be found!");
         }
 
+        public void ListProfiles()
+        {
+            Console.WriteLine("Profiles:");
+            var profiles = GetProfiles();
+            foreach (var profile in profiles)
+            {
+                Console.WriteLine($" - {profile.Name}");
+            }
+        }
+
+        public void ListMods()
+        {
+            // TODO : Maybe improve this implementation by actually making a real Mod or ModDirectory or whatever kind of struct with info about the mods? Like name, path, etc...
+            Console.WriteLine("Mods:");
+            DirectoryInfo info = new DirectoryInfo(ModsContentPath);
+            foreach(var mod in info.GetDirectories())
+                Console.WriteLine($" - {mod.Name}");
+        }
+
         public Profile[] GetProfiles()
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(this.ModsContentPath);
