@@ -52,11 +52,11 @@ namespace MagickCowModManager.Core
             {
                 if (profile.Name == profileName)
                 {
-                    Console.WriteLine($"Installing mods from profile \"{profileName}\"");
+                    Console.WriteLine($"Installing mods from profile \"{profileName}\"!");
                     return;
                 }
             }
-            throw new Exception($"The specified profile \"{profileName}\" could not be found!");
+            throw new Exception($"The profile \"{profileName}\" could not be found!");
         }
 
         public Profile[] GetProfiles()
