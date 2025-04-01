@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagickCowModManager.Core.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,15 +18,18 @@ namespace MagickCowModManager.Core.Args
 
         #region Command Variables
 
-        private bool cmdHelpWasExecuted;
+        private bool cmdvar_HelpWasExecuted;
 
-        private string modsContentPath;
-        private string gameContentPath;
+        private bool cmdvar_ModsContentPathSet;
+        private bool cmdvar_GameContentPathSet;
+        private string cmdvar_ModsContentPath;
+        private string cmdvar_GameContentPath;
 
-        private bool cmdListMods;
-        private bool cmdListProfiles;
-        private bool cmdApplyProfile;
-        private string profile;
+        private bool cmdvar_ListMods;
+        private bool cmdvar_ListProfiles;
+        
+        private bool cmdvar_ApplyProfile;
+        private string cmdvar_Profile;
 
         #endregion
 
@@ -94,14 +98,18 @@ namespace MagickCowModManager.Core.Args
                 },
             ];
 
-            this.cmdHelpWasExecuted = false;
+            cmdvar_HelpWasExecuted = false;
 
-            this.modsContentPath = "./Mods";
-            this.gameContentPath = "./Content";
+            cmdvar_ModsContentPathSet = false;
+            cmdvar_GameContentPathSet = false;
+            cmdvar_ModsContentPath = "./Mods";
+            cmdvar_GameContentPath = "./Content";
 
-            this.cmdListMods = false;
-            this.cmdListProfiles = false;
-            this.cmdApplyProfile = false;
+            cmdvar_ListMods = false;
+            cmdvar_ListProfiles = false;
+
+            cmdvar_ApplyProfile = false;
+            cmdvar_Profile = "Default";
         }
 
         #endregion
@@ -111,20 +119,20 @@ namespace MagickCowModManager.Core.Args
         public void Run()
         {
             // NEVER run any commands if the help command was used.
-            if (this.cmdHelpWasExecuted)
+            if (this.cmdvar_HelpWasExecuted)
                 return;
 
-            this.ModManager.ModsContentPath = this.modsContentPath;
-            this.ModManager.GameContentPath = this.gameContentPath;
+            this.ModManager.ModsContentPath = this.cmdvar_ModsContentPath;
+            this.ModManager.GameContentPath = this.cmdvar_GameContentPath;
 
-            if (this.cmdListMods)
+            if (this.cmdvar_ListMods)
                 this.ModManager.ListMods();
 
-            if (this.cmdListProfiles)
+            if (this.cmdvar_ListProfiles)
                 this.ModManager.ListProfiles();
 
-            if(this.cmdApplyProfile)
-                this.ModManager.ApplyProfile(this.profile);
+            if(this.cmdvar_ApplyProfile)
+                this.ModManager.ApplyProfile(this.cmdvar_Profile);
         }
 
         #endregion
@@ -142,7 +150,7 @@ namespace MagickCowModManager.Core.Args
 
         public void CmdHelp(string[] args, int index)
         {
-            this.cmdHelpWasExecuted = true;
+            this.cmdvar_HelpWasExecuted = true;
             Print($"Usage : mcow-mm [OPTIONS] <ARGS>");
             foreach (var cmd in this.Commands)
             {
@@ -152,35 +160,59 @@ namespace MagickCowModManager.Core.Args
 
         public void CmdSetPath_Game(string[] args, int index)
         {
+            if (this.cmdvar_ModsContentPathSet || this.cmdvar_GameContentPathSet)
+            {
+                throw new CommandException("Content paths cannot be set more than once in a single call!");
+            }
+
             string gamePath = args[index + 1];
-            this.modsContentPath = Path.Combine(gamePath, "Mods");
-            this.gameContentPath = Path.Combine(gamePath, "Content");
+            
+            this.cmdvar_ModsContentPath = Path.Combine(gamePath, "Mods");
+            this.cmdvar_GameContentPath = Path.Combine(gamePath, "Content");
+
+            this.cmdvar_ModsContentPathSet = true;
+            this.cmdvar_GameContentPathSet = true;
         }
 
         public void CmdSetPath_ModsContent(string[] args, int index)
         {
-            this.modsContentPath = args[index + 1];
+            if (this.cmdvar_ModsContentPathSet)
+            {
+                throw new CommandException("Mods Content path cannot be set more than once in a single call!");
+            }
+
+            this.cmdvar_ModsContentPath = args[index + 1];
         }
 
         public void CmdSetPath_GameContent(string[] args, int index)
         {
-            this.gameContentPath = args[index + 1];
+            if (this.cmdvar_GameContentPathSet)
+            {
+                throw new CommandException("Game Content path cannot be set more than once in a single call!");
+            }
+
+            this.cmdvar_GameContentPath = args[index + 1];
         }
 
         public void CmdListMods(string[] args, int index)
         {
-            this.cmdListMods = true;
+            this.cmdvar_ListMods = true;
         }
 
         public void CmdListProfiles(string[] args, int index)
         {
-            this.cmdListProfiles = true;
+            this.cmdvar_ListProfiles = true;
         }
 
         public void CmdApplyProfile(string[] args, int index)
         {
-            this.cmdApplyProfile = true;
-            this.profile = args[index + 1];
+            if (this.cmdvar_ApplyProfile)
+            {
+                throw new CommandException("Cannot apply multiple profiles in a single call!");
+            }
+
+            this.cmdvar_ApplyProfile = true;
+            this.cmdvar_Profile = args[index + 1];
         }
 
         #endregion
