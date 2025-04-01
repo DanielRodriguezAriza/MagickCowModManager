@@ -57,11 +57,14 @@ namespace MagickCowModManager.Core.FileHandling
 
         private void RegisterData(DirectoryInfo origin)
         {
+            Console.WriteLine("Registering Data...");
             FileSystemHelper.GetChildPaths(origin, this.directoriesToInstall, this.filesToInstall);
         }
 
         private void GenerateData(DirectoryInfo origin, DirectoryInfo destination)
         {
+            Console.WriteLine("Generating Data...");
+
             foreach (var dir in this.directoriesToInstall)
             {
                 string dirToCreate = Path.Combine(destination.FullName, dir);
@@ -82,7 +85,7 @@ namespace MagickCowModManager.Core.FileHandling
 
                 if (!File.Exists(fileToCreate) || !FileSystemHelper.FileContentsAreEqual(fileToCopy, fileToCreate))
                 {
-                    // Console.WriteLine("The file is being copied...");
+                    Console.WriteLine($"Creating File : {fileToCreate}");
                     File.Copy(fileToCopy, fileToCreate, true);
                 }
                 else
@@ -95,13 +98,15 @@ namespace MagickCowModManager.Core.FileHandling
 
         private void CleanUpData(DirectoryInfo destination)
         {
+            Console.WriteLine("Cleaning Up Data...");
+
             List<string> dirsToRemove = new List<string>();
             List<string> filesToRemove = new List<string>();
             FileSystemHelper.GetChildPathsDiff(destination, this.directoriesToInstall, this.filesToInstall, dirsToRemove, filesToRemove);
 
             foreach (var file in filesToRemove)
             {
-                // Console.WriteLine(file);
+                Console.WriteLine($"Deleting File : {file}");
                 File.Delete(file);
             }
 
