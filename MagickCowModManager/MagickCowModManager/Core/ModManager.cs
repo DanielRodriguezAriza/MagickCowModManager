@@ -30,7 +30,7 @@ namespace MagickCowModManager.Core
         { }
 
         public ModManager(string gamePath)
-        : this(Path.Combine(gamePath, "/Mods"), Path.Combine(gamePath, "/Content"))
+        : this(Path.Combine(gamePath, "Mods"), Path.Combine(gamePath, "Content"))
         { }
 
         public ModManager(string modsPath, string contentPath)
@@ -38,6 +38,9 @@ namespace MagickCowModManager.Core
             this.ModsContentPath = modsPath;
             this.GameContentPath = contentPath;
             this.handler = new FileHandler();
+
+            Console.WriteLine($"Mods Content Path : {this.ModsContentPath}");
+            Console.WriteLine($"Game Content Path : {this.GameContentPath}");
         }
 
         #endregion
