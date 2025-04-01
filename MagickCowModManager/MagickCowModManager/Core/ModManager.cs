@@ -45,9 +45,18 @@ namespace MagickCowModManager.Core
         #region PublicMethods
 
         // NOTE : Maybe rename to LoadProfile ? The point is that this function basically loads a profile and sets the active mods to be the ones within this profile.
-        public void ApplyProfile(string filePath)
+        public void ApplyProfile(string profileName)
         {
-            GetProfiles();
+            var profiles = GetProfiles();
+            foreach (var profile in profiles)
+            {
+                if (profile.Name == profileName)
+                {
+                    Console.WriteLine($"Installing mods from profile \"{profileName}\"");
+                    return;
+                }
+            }
+            throw new Exception($"The specified profile \"{profileName}\" could not be found!");
         }
 
         public Profile[] GetProfiles()
@@ -61,7 +70,7 @@ namespace MagickCowModManager.Core
             {
                 try
                 {
-                    Profile profile = GetProfile(fileInfo.FullName);
+                    Profile profile = GetProfile(fileInfo);
                     foundProfiles.Add(profile);
                 }
                 catch
@@ -73,9 +82,13 @@ namespace MagickCowModManager.Core
             return foundProfiles.ToArray();
         }
 
-        public Profile GetProfile(string filePath)
+        public Profile GetProfile(FileInfo fileInfo)
         {
-            Profile profile = new Profile(filePath);
+            string json = File.ReadAllText(fileInfo.FullName);
+
+            Profile profile = JsonSerializer.Deserialize<Profile>(json);
+            profile.Name = fileInfo.Name;
+            
             return profile;
         }
 
