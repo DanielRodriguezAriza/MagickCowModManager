@@ -50,7 +50,8 @@ namespace MagickCowModManager.Core
 
         #region PublicMethods
 
-        public void LoadAllMods()
+        // NOTE : Maybe rename to LoadProfile ? The point is that this function basically loads a profile and sets the active mods to be the ones within this profile.
+        public void ApplyProfile(string filePath)
         {
             // TODO : Implement
         }
