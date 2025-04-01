@@ -88,12 +88,6 @@ namespace MagickCowModManager.Core
         #endregion
 
         #region PrivateMethods
-
-        private void ReadModLoadOrder(string path)
-        {
-            File.Open(path, FileMode.Open, FileAccess.Read);
-        }
-
         #endregion
 
     }
