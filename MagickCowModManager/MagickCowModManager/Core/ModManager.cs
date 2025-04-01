@@ -79,6 +79,7 @@ namespace MagickCowModManager.Core
                 }
                 catch
                 {
+                    // Console.WriteLine($"The file \"{fileInfo.FullName}\" is not a valid profile file!");
                     // Do nothing, just skip the file if it's not a valid JSON file that matches the ModProfile "schema"...
                 }
             }
