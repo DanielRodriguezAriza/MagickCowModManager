@@ -58,6 +58,7 @@ namespace MagickCowModManager.Core
                 if (profile.Name == profileName)
                 {
                     Console.WriteLine($"Installing mods from profile \"{profileName}\"!");
+                    InstallProfile(profile);
                     return;
                 }
             }
@@ -135,6 +136,54 @@ namespace MagickCowModManager.Core
         #endregion
 
         #region PrivateMethods
+
+        private void InstallProfile(Profile profile)
+        {
+            foreach (var modName in profile.EnabledMods)
+            {
+                InstallMod(modName);
+            }
+        }
+
+        private void InstallMod(string modName)
+        {
+            string originPath = Path.Combine(this.ModsContentPath, modName, "Content");
+            string destinationPath = this.GameContentPath;
+            ProcessDirectory(originPath, destinationPath);
+        }
+
+        private void ProcessDirectory(string origin, string destination)
+        {
+            DirectoryInfo originInfo = new DirectoryInfo(origin);
+            DirectoryInfo destinationInfo = new DirectoryInfo(destination);
+            ProcessDirectory(originInfo, destinationInfo);
+        }
+
+        private void ProcessDirectory(DirectoryInfo origin, DirectoryInfo destination)
+        {
+            DirectoryInfo[] childDirs = origin.GetDirectories();
+            FileInfo[] childFiles = origin.GetFiles();
+
+            foreach (var file in childFiles)
+            {
+                ProcessFile(file, destination);
+            }
+
+            foreach (var dir in childDirs)
+            {
+                var newDir = destination.CreateSubdirectory(Path.Combine(destination.FullName, dir.Name));
+                ProcessDirectory(dir, newDir);
+            }
+        }
+
+        private void ProcessFile(FileInfo fileInfo, DirectoryInfo destination)
+        {
+            // TODO : Add permission handling in the future or what?
+            // File.CreateSymbolicLink(Path.Combine(destination.FullName, fileInfo.Name), fileInfo.FullName);
+
+            File.Copy(fileInfo.FullName, Path.Combine(destination.FullName, fileInfo.Name)); // Shitty, what about heavy files? don't want to copy those... fucking windows I swear...
+        }
+
         #endregion
     }
 }
