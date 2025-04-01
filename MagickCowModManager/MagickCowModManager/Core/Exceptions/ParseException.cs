@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MagickCowModManager.Core.Exceptions
 {
-    public class ParseException : Exception
+    public class ParseException : MagickCowModManagerException
     {
         public ParseException() : base()
         { }

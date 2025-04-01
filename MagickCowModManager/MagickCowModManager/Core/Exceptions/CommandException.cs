@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MagickCowModManager.Core.Exceptions
 {
-    public class CommandException : Exception
+    public class CommandException : MagickCowModManagerException
     {
         public CommandException() : base()
         { }
