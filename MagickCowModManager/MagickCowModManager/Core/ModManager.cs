@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagickCowModManager.Core.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,6 +62,35 @@ namespace MagickCowModManager.Core
         private void ReadModLoadOrder(string path)
         {
             File.Open(path, FileMode.Open, FileAccess.Read);
+        }
+
+        private ModProfile[] GetProfiles()
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(this.ModsContentPath);
+            FileInfo[] fileInfos = directoryInfo.GetFiles();
+
+            List<ModProfile> foundProfiles = new List<ModProfile>();
+
+            foreach (var fileInfo in fileInfos)
+            {
+                try
+                {
+                    ModProfile profile = GetProfile(fileInfo.FullName);
+                    foundProfiles.Add(profile);
+                }
+                catch
+                {
+                    // Do nothing, just skip the file if it's not a valid JSON file that matches the ModProfile "schema"...
+                }
+            }
+
+            return foundProfiles.ToArray();
+        }
+
+        private ModProfile GetProfile(string filePath)
+        {
+            string json = File.ReadAllText(filePath);
+            var profileData = JsonSerializer.Deserialize<ModProfileData>(json);
         }
 
         #endregion
