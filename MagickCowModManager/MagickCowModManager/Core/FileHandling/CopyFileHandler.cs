@@ -45,9 +45,11 @@ namespace MagickCowModManager.Core.FileHandling
 
             RegisterData(originInfo);
 
+            /*
             foreach (var file in this.filesToInstall)
                 Console.WriteLine(file);
             Console.ReadLine();
+            */
 
             GenerateData(originInfo, destinationInfo);
             CleanUpData(destinationInfo);
@@ -74,9 +76,19 @@ namespace MagickCowModManager.Core.FileHandling
                 string fileToCopy = Path.Combine(origin.FullName, file);
                 string fileToCreate = Path.Combine(destination.FullName, file);
 
-                if (!File.Exists(fileToCreate) || FileSystemHelper.FileContentsAreEqual(fileToCopy, fileToCreate))
+                // Console.WriteLine($"The file we are going to copy is   : {fileToCopy}");
+                // Console.WriteLine($"The file we are going to create is : {fileToCreate}");
+                // Console.ReadLine();
+
+                if (!File.Exists(fileToCreate) || !FileSystemHelper.FileContentsAreEqual(fileToCopy, fileToCreate))
                 {
+                    // Console.WriteLine("The file is being copied...");
                     File.Copy(fileToCopy, fileToCreate, true);
+                }
+                else
+                {
+                    // Do nothing because the file is already there!
+                    // Console.WriteLine("The file already exists!");
                 }
             }
         }
@@ -89,11 +101,13 @@ namespace MagickCowModManager.Core.FileHandling
 
             foreach (var file in filesToRemove)
             {
+                // Console.WriteLine(file);
                 File.Delete(file);
             }
 
             foreach (var dir in dirsToRemove)
             {
+                // Console.WriteLine(dir);
                 Directory.Delete(dir);
             }
         }
