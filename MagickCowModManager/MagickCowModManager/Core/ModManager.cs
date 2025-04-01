@@ -1,4 +1,5 @@
 ﻿using MagickCowModManager.Core.Data;
+using MagickCowModManager.Core.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +60,7 @@ namespace MagickCowModManager.Core
                     return;
                 }
             }
-            throw new Exception($"The profile \"{profileName}\" could not be found!");
+            throw new LoadException($"The profile \"{profileName}\" could not be found!");
         }
 
         public Profile[] GetProfiles()
