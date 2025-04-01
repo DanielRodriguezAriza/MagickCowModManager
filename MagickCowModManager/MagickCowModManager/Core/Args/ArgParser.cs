@@ -27,22 +27,27 @@ namespace MagickCowModManager.Core.Args
             {
                 int argsRemaining = args.Length - i - 1;
                 var arg = args[i];
+                bool commandFound = false;
 
                 foreach (var cmd in this.commandHandler.Commands)
                 {
                     if ($"-{cmd.ShortCommand}" == arg || $"--{cmd.LongCommand}" == arg)
                     {
+                        commandFound = true;
                         if (argsRemaining < cmd.Arguments.Length)
                         {
                             throw new Exception($"Not enough arguments found : {cmd.Arguments.Length} were expected, but {argsRemaining} were found!");
                         }
                         cmd.Function(args, i);
                         i += cmd.Arguments.Length; // Consume the arguments as well.
-                        return;
+                        break;
                     }
                 }
 
-                throw new Exception($"Unknown argument found : \"{arg}\"");
+                if (!commandFound)
+                {
+                    throw new Exception($"Unknown argument found : \"{arg}\"");
+                }
             }
         }
     }
