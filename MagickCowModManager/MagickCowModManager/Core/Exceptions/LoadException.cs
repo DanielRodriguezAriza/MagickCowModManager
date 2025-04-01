@@ -11,10 +11,10 @@ namespace MagickCowModManager.Core.Exceptions
         public LoadException() : base()
         { }
 
-        public LoadException(string? message) : base($"Load Error : {message}")
+        public LoadException(string? message) : base(message)
         { }
 
-        public LoadException(string? message, Exception innerException) : base($"Load Error : {message}", innerException)
+        public LoadException(string? message, Exception innerException) : base(message, innerException)
         { }
     }
 }
