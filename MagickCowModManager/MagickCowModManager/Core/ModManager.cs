@@ -1,4 +1,5 @@
-﻿using MagickCowModManager.Core.Data;
+﻿using MagickCowModManager.Core.Args;
+using MagickCowModManager.Core.Data;
 using MagickCowModManager.Core.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -95,6 +96,12 @@ namespace MagickCowModManager.Core
             profile.Name = fileInfo.Name;
             
             return profile;
+        }
+
+        public void ParseArguments(string[] args)
+        {
+            ArgParser parser = new ArgParser(this);
+            parser.Parse(args);
         }
 
         #endregion
