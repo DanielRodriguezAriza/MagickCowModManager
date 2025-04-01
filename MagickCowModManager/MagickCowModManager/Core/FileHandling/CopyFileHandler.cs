@@ -35,7 +35,7 @@ namespace MagickCowModManager.Core.FileHandling
             foreach (var modName in this.profile.EnabledMods)
             {
                 // Install Mod
-                Console.WriteLine($"Installing Mod \"{modName}\"");
+                Console.WriteLine($"Installing Mod \"{modName}\"...");
 
                 string modPath = Path.Combine(this.modsContentPath, modName, "Content");
                 DirectoryInfo originInfo = new DirectoryInfo(modPath);
@@ -43,20 +43,21 @@ namespace MagickCowModManager.Core.FileHandling
                 RegisterData(originInfo);
                 GenerateData(originInfo, destinationInfo);
             }
-            
+
             // Clean Up Mods after installing all of them to remove old files that are now unused to prevent loading unwanted / unloaded mods
+            Console.WriteLine("Cleaning Up Mod Data...");
             CleanUpData(destinationInfo);
         }
 
         private void RegisterData(DirectoryInfo origin)
         {
-            Console.WriteLine("Registering Data...");
+            // Console.WriteLine("Registering Data...");
             FileSystemHelper.GetChildPaths(origin, this.directoriesToInstall, this.filesToInstall);
         }
 
         private void GenerateData(DirectoryInfo origin, DirectoryInfo destination)
         {
-            Console.WriteLine("Generating Data...");
+            // Console.WriteLine("Generating Data...");
 
             foreach (var dir in this.directoriesToInstall)
             {
@@ -91,7 +92,7 @@ namespace MagickCowModManager.Core.FileHandling
 
         private void CleanUpData(DirectoryInfo destination)
         {
-            Console.WriteLine("Cleaning Up Data...");
+            // Console.WriteLine("Cleaning Up Data...");
 
             List<string> dirsToRemove = new List<string>();
             List<string> filesToRemove = new List<string>();
