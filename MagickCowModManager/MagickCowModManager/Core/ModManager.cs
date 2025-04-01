@@ -119,8 +119,8 @@ namespace MagickCowModManager.Core
 
         public void ParseArguments(string[] args)
         {
-            ArgParser parser = new ArgParser(this);
-            parser.Parse(args);
+            ArgParser argParser = new ArgParser(this);
+            argParser.Parse(args);
         }
 
         #endregion
