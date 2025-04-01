@@ -22,6 +22,11 @@ namespace MagickCowModManager.Core.Args
         private string modsContentPath;
         private string gameContentPath;
 
+        private bool cmdListMods;
+        private bool cmdListProfiles;
+        private bool cmdApplyProfile;
+        private string profile;
+
         #endregion
 
         #region Constructor
@@ -35,7 +40,7 @@ namespace MagickCowModManager.Core.Args
                 {
                     ShortCommand = "h",
                     LongCommand = "help",
-                    Arguments = Array.Empty<string>(),
+                    Arguments = [],
                     Description = "Display this help message",
                     Function = CmdHelp
                 },
@@ -65,13 +70,38 @@ namespace MagickCowModManager.Core.Args
                 },
                 new Command
                 {
-
-                }
+                    ShortCommand = "lm",
+                    LongCommand = "list-mods",
+                    Arguments = [],
+                    Description = "Display the list of all mods stored within the \"Mods\" folder",
+                    Function = CmdListMods
+                },
+                new Command
+                {
+                    ShortCommand = "lp",
+                    LongCommand = "list-profiles",
+                    Arguments = [],
+                    Description = "Display the list of all profiles stored within the \"Mods\" folder",
+                    Function = CmdListProfiles
+                },
+                new Command
+                {
+                    ShortCommand = "a",
+                    LongCommand = "apply-profile",
+                    Arguments = ["profile-name"],
+                    Description = "Apply a mod profile",
+                    Function = CmdApplyProfile
+                },
             ];
 
             this.cmdHelpWasExecuted = false;
+
             this.modsContentPath = "./Mods";
             this.gameContentPath = "./Content";
+
+            this.cmdListMods = false;
+            this.cmdListProfiles = false;
+            this.cmdApplyProfile = false;
         }
 
         #endregion
@@ -126,6 +156,22 @@ namespace MagickCowModManager.Core.Args
         public void CmdSetPath_GameContent(string[] args, int index)
         {
             this.gameContentPath = args[index + 1];
+        }
+
+        public void CmdListMods(string[] args, int index)
+        {
+            this.cmdListMods = true;
+        }
+
+        public void CmdListProfiles(string[] args, int index)
+        {
+            this.cmdListProfiles = true;
+        }
+
+        public void CmdApplyProfile(string[] args, int index)
+        {
+            this.cmdApplyProfile = true;
+            this.profile = args[index + 1];
         }
 
         #endregion
