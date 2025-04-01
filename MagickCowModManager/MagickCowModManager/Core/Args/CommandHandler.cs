@@ -62,6 +62,10 @@ namespace MagickCowModManager.Core.Args
                     Arguments = ["game-content-path"],
                     Description = "Set the path where the \"Content\" folder is located",
                     Function = CmdSetPath_GameContent
+                },
+                new Command
+                {
+
                 }
             ];
 
@@ -80,7 +84,8 @@ namespace MagickCowModManager.Core.Args
             if (this.cmdHelpWasExecuted)
                 return;
 
-            // TODO : Implement mod manager execution...
+            this.ModManager.ModsContentPath = this.modsContentPath;
+            this.ModManager.GameContentPath = this.gameContentPath;
         }
 
         #endregion
