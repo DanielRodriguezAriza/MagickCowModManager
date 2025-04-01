@@ -17,6 +17,12 @@ namespace MagickCowModManager.Core.Args
 
         public void Parse(string[] args)
         {
+            if (args.Length == 0)
+            {
+                this.commandHandler.CmdHelp(args, 0);
+                return;
+            }
+
             for (int i = 0; i < args.Length; ++i)
             {
                 int argsRemaining = args.Length - i - 1;
