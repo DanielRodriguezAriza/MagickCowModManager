@@ -161,15 +161,28 @@ namespace MagickCowModManager.Core
 
         private void ProcessDirectory(DirectoryInfo origin, DirectoryInfo destination)
         {
-            DirectoryInfo[] childDirs = origin.GetDirectories();
-            FileInfo[] childFiles = origin.GetFiles();
-
-            foreach (var file in childFiles)
+            // Copy files from origin to destination
+            FileInfo[] childFilesOrigin = origin.GetFiles();
+            foreach (var file in childFilesOrigin)
             {
                 ProcessFile(file, destination);
             }
 
-            foreach (var dir in childDirs)
+            // Clean up files that are not in the origin directory
+            // THIS IS ACTUALLY WRONG BECAUSE WE ONLY CHECK THE CURRENT MOD DIR, WHAT ABOUT ALL THE OTHER DIRS?? WE DELETE THE WORK WE JUST DID WTF!!!
+            string[] childFileNamesOrigin = origin.GetFiles().Select(file => file.Name).ToArray();
+            string[] childFileNamesDestination = destination.GetFiles().Select(file => file.Name).ToArray();
+            foreach (var fileName in childFileNamesDestination)
+            {
+                if (!childFileNamesOrigin.Contains(fileName))
+                {
+                    File.Delete(Path.Combine(destination.FullName, fileName));
+                }
+            }
+
+            // Copy directories from origin to destination
+            DirectoryInfo[] childDirsOrigin = origin.GetDirectories();
+            foreach (var dir in childDirsOrigin)
             {
                 var newDir = destination.CreateSubdirectory(dir.Name);
                 ProcessDirectory(dir, newDir);
