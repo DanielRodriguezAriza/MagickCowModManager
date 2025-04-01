@@ -29,29 +29,21 @@ namespace MagickCowModManager.Core.FileHandling
 
         public void InstallMods()
         {
+            DirectoryInfo destinationInfo = new DirectoryInfo(this.gameContentPath);
+
             foreach (var modName in this.profile.EnabledMods)
             {
-                InstallMod(modName);
+                // Install Mod
+                Console.WriteLine($"Installing Mod \"{modName}\"");
+
+                string modPath = Path.Combine(this.modsContentPath, modName, "Content");
+                DirectoryInfo originInfo = new DirectoryInfo(modPath);
+
+                RegisterData(originInfo);
+                GenerateData(originInfo, destinationInfo);
             }
-        }
-
-        private void InstallMod(string modName)
-        {
-            string originPath = Path.Combine(this.modsContentPath, modName, "Content");
-            string destinationPath = this.gameContentPath;
-
-            DirectoryInfo originInfo = new DirectoryInfo(originPath);
-            DirectoryInfo destinationInfo = new DirectoryInfo(destinationPath);
-
-            RegisterData(originInfo);
-
-            /*
-            foreach (var file in this.filesToInstall)
-                Console.WriteLine(file);
-            Console.ReadLine();
-            */
-
-            GenerateData(originInfo, destinationInfo);
+            
+            // Clean Up Mods after installing all of them to remove old files that are now unused to prevent loading unwanted / unloaded mods
             CleanUpData(destinationInfo);
         }
 
@@ -83,7 +75,7 @@ namespace MagickCowModManager.Core.FileHandling
                 // Console.WriteLine($"The file we are going to create is : {fileToCreate}");
                 // Console.ReadLine();
 
-                if (!File.Exists(fileToCreate) || !FileSystemHelper.FileContentsAreEqual(fileToCopy, fileToCreate))
+                if (File.Exists(fileToCopy) && (!File.Exists(fileToCreate) || !FileSystemHelper.FileContentsAreEqual(fileToCopy, fileToCreate)))
                 {
                     Console.WriteLine($"Creating File : {fileToCreate}");
                     File.Copy(fileToCopy, fileToCreate, true);
@@ -106,14 +98,16 @@ namespace MagickCowModManager.Core.FileHandling
 
             foreach (var file in filesToRemove)
             {
-                Console.WriteLine($"Deleting File : {file}");
-                File.Delete(file);
+                string path = Path.Combine(destination.FullName, file);
+                Console.WriteLine($"Deleting File : {path}");
+                File.Delete(path);
             }
 
             foreach (var dir in dirsToRemove)
             {
-                // Console.WriteLine(dir);
-                Directory.Delete(dir);
+                string path = Path.Combine(destination.FullName, dir);
+                Console.WriteLine($"Deleting Directory : {path}");
+                Directory.Delete(path);
             }
         }
     }
