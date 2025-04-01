@@ -17,7 +17,7 @@ namespace MagickCowModManager.Core.Args
 
         #region Command Variables
 
-
+        private bool cmdHelpWasExecuted;
 
         #endregion
 
@@ -37,6 +37,21 @@ namespace MagickCowModManager.Core.Args
                     Function = CmdHelp
                 }
             ];
+
+            this.cmdHelpWasExecuted = false;
+        }
+
+        #endregion
+
+        #region Public Methods - Execution
+
+        public void Run()
+        {
+            // NEVER run any commands if the help command was used.
+            if (this.cmdHelpWasExecuted)
+                return;
+
+            // TODO : Implement mod manager execution...
         }
 
         #endregion
@@ -54,6 +69,7 @@ namespace MagickCowModManager.Core.Args
 
         public void CmdHelp(string[] args, int index)
         {
+            this.cmdHelpWasExecuted = true;
             Print($"Usage : mcow-mm [OPTIONS] <ARGS>");
             foreach (var cmd in this.Commands)
             {
