@@ -181,6 +181,8 @@ namespace MagickCowModManager.Core
             // TODO : Add permission handling in the future or what?
             // File.CreateSymbolicLink(Path.Combine(destination.FullName, fileInfo.Name), fileInfo.FullName);
 
+            Console.WriteLine($"Installing mod file : {fileInfo.FullName}");
+
             File.Copy(fileInfo.FullName, Path.Combine(destination.FullName, fileInfo.Name)); // Shitty, what about heavy files? don't want to copy those... fucking windows I swear...
         }
 
