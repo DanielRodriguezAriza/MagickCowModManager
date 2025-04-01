@@ -76,7 +76,25 @@ namespace MagickCowModManager.Core.FileHandling
 
         private void GenerateData(DirectoryInfo origin, DirectoryInfo destination)
         {
+            foreach (var dir in this.directoriesToInstall)
+            {
+                string dirToCreate = Path.Combine(destination.FullName, dir);
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dirToCreate);
+                }
+            }
 
+            foreach (var file in this.filesToInstall)
+            {
+                string fileToCopy = Path.Combine(origin.FullName, file);
+                string fileToCreate = Path.Combine(destination.FullName, file);
+
+                if (!File.Exists(fileToCreate) || FileContentsAreEqual(fileToCopy, fileToCreate))
+                {
+                    File.Copy(fileToCopy, fileToCreate, true);
+                }
+            }
         }
 
         private void ProcessDirectory(DirectoryInfo origin, DirectoryInfo destination)
