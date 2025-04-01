@@ -74,7 +74,7 @@ namespace MagickCowModManager.Core.FileHandling
                 {
                     targetFoundDirs.Add(path);
                 }
-                GetChildPathsDiffRec(parent, dir, originFoundDirs, originFoundFiles, targetFoundDirs, targetFoundFiles);
+                GetChildPathsDiffRec(path, dir, originFoundDirs, originFoundFiles, targetFoundDirs, targetFoundFiles);
             }
         }
 
