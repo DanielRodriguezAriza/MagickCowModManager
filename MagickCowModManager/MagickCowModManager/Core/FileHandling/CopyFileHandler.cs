@@ -9,6 +9,7 @@ namespace MagickCowModManager.Core.FileHandling
 {
     // File Handler that uses Copy operations to handle file creation
     // NOTE : For future updates: it's probably a bit faster to perform the file verification on the same step as the copy step rather than doing it in 2 different loops. But for now, this is ok. This would mean that possibly, a speedup could exist if we merged the generate and register stages together. Obviously it would be super fast if we could merge cleanup as well, which would be trivial if we had a single source / origin, but we're merging multiple source directories into a single target, which requires a lot more diffing work... all in all, check this idea out in the future when you have time.
+    // NOTE : When making the simple raw copy operator / handler, what you should do instead of all of this bullshit, is simply copying in reverse load order, simple as that. Delete everything from the Content folder, and then load the mods in reverse order from how they appear in the load order list. When a duplicate entry is found simply by File.Exists() with name, then don't copy it. That way, you already have the latest possible file, the last one in the load order. Kinda like the base JKA load trick which openJKA got rid of for some reason... (or maybe I'm misremembering how this worked in JKA, but whatever...)
     public class CopyFileHandler
     {
         private string modsContentPath;
