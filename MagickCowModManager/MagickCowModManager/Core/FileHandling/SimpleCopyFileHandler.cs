@@ -52,6 +52,7 @@ namespace MagickCowModManager.Core.FileHandling
                     // Console.WriteLine("Creating file : " + targetPath);
                     // File.Copy(file.FullName, targetPath);
                     File.CreateSymbolicLink(targetPath, file.FullName);
+                    // FileHandler.CopyFile(file.FullName, targetPath); // TODO : Change the code to use this line instead. Still need to check for correctness when using hard links and stuff like that, so yeah. And ofc, think of the performance impact of switching every single time we call this function... we may need to rework that so that we pick the function BEFORE starting the process, maybe with an Action or something, idk... for now, just use symlink always and that's it.
                 }
                 else
                 {
