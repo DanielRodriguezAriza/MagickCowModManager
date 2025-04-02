@@ -52,7 +52,13 @@ namespace MagickCowModManager.Core.FileHandling
                 if (!File.Exists(targetPath))
                 {
                     // Console.WriteLine("Creating file : " + targetPath);
-                    File.Copy(file.FullName, targetPath);
+                    // File.Copy(file.FullName, targetPath);
+                    File.CreateSymbolicLink(targetPath, file.FullName);
+                }
+                else
+                {
+                    File.Delete(targetPath);
+                    File.CreateSymbolicLink(targetPath, file.FullName);
                 }
             }
 
