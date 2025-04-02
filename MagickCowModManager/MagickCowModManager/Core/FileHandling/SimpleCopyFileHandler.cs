@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace MagickCowModManager.Core.FileHandling
 {
+    // NOTE : Reverse load order implementation:
+    // 
+    // File / Asset overriding is now implemented through reverse copy.
+    // The copy is performed in reverse order, by copying / symlinking first the data of the last mod in the load order.
+    // Then, when the previous mods are loaded, if the file is already present, it is simply ignored.
+
     public class SimpleCopyFileHandler
     {
         public SimpleCopyFileHandler()
