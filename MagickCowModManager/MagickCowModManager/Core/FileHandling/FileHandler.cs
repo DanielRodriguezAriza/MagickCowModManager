@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace MagickCowModManager.Core.FileHandling
 {
     // TODO : Use this class as the file copying and handling backend. Also, make sure to rename the other "file handler" classes to something that makes more sense... they are part of the mod manager after all, maybe mod loader or something could be a good name?
+    // NOTE : Maybe, in linux, automatically use symlink. On windows, default to hard link if the hard drives are the same, and then use symlink if they are not the same... could use some automatic detection shit or whatever... or just make it a manual setting...
     public static class FileHandler
     {
         public static void CopyFile(string origin, string destination, FileHandlingMode mode = FileHandlingMode.SymbolicLink)
