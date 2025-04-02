@@ -51,19 +51,36 @@ namespace MagickCowModManager.Core.FileHandling
 
         private static void CopyFileInternal_HardLink(string origin, string destination)
         {
-            // TODO : Find a way to implement this in both windows and linux.
-            // For windows I already know what DLL and function to load, just need to find the same for linux.
-            // Also add a "not supported" message / exception for any other system.
-            throw new NotImplementedException("Hard Link usage is not implemented yet!");   
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                bool success = CreateHardLink(destination, origin, IntPtr.Zero);
+                if (!success)
+                {
+                    throw new Exception("Failed to create hard link on Windows");
+                }
+            }
+            else
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
+            {
+                bool success = link(origin, destination) == 0;
+                if (!success)
+                {
+                    throw new Exception("Failed to create hard link on Unix-like system");
+                }
+            }
+            else
+            {
+                throw new NotImplementedException("Hard Link usage is not implemented yet!");
+            }
         }
 
         // Windows API for creating hard links.
         [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, IntPtr lpSecurityAttributes);
+        private static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, IntPtr lpSecurityAttributes);
 
         // Linux API for creating hard links.
         // Also works for macOS, but I think I need to use hunlink() to remove directories and files that are hard linked... not sure about that tho...
         [DllImport("libc", SetLastError = true)]
-        static extern int link(string oldpath, string newpath);
+        private static extern int link(string oldpath, string newpath);
     }
 }
