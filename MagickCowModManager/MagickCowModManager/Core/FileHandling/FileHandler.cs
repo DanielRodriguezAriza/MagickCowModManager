@@ -49,38 +49,82 @@ namespace MagickCowModManager.Core.FileHandling
             File.CreateSymbolicLink(destination, origin);
         }
 
+        // NOTE : This makes me cry blood... runtime checks to see what OS we're on... why couldn't this shit be done at compiletime on C#??
+        // Oh how I miss macros and conditional compilation from C...
         private static void CopyFileInternal_HardLink(string origin, string destination)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                bool success = CreateHardLink(destination, origin, IntPtr.Zero);
-                if (!success)
-                {
-                    throw new Exception("Failed to create hard link on Windows");
-                }
+                Win32Helper.CreateFileAsHardLink(origin, destination);
             }
             else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
             {
-                bool success = link(origin, destination) == 0;
-                if (!success)
-                {
-                    throw new Exception("Failed to create hard link on Unix-like system");
-                }
+                UnixHelper.CreateFileAsHardLink(origin, destination);
             }
             else
             {
-                throw new NotImplementedException("Hard Link usage is not implemented yet!");
+                throw new NotImplementedException("Hard Link usage is not implemented yet on the current platform!)");
             }
         }
 
-        // Windows API for creating hard links.
-        [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, IntPtr lpSecurityAttributes);
+        private static class Win32Helper
+        {
+            // Gotta love Windows and their undocumented magic numbers! took quite a while to find the definition of this macro...
+            // And ofc, here on C# it has to be a fucking const int, like wtf...
+            const int FORMAT_MESSAGE_FROM_SYSTEM = 0x00001000;
 
-        // Linux API for creating hard links.
-        // Also works for macOS, but I think I need to use hunlink() to remove directories and files that are hard linked... not sure about that tho...
-        [DllImport("libc", SetLastError = true)]
-        private static extern int link(string oldpath, string newpath);
+            // Windows API for creating hard links.
+            [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+            private static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, IntPtr lpSecurityAttributes);
+
+            [DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            private static extern int FormatMessage(int flags, IntPtr source, int messageId, int languageId, StringBuilder buffer, int size, IntPtr arguments);
+
+            private static string GetErrorMessage(int errorCode)
+            {
+                StringBuilder buffer = new StringBuilder(256);
+                FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, IntPtr.Zero, errorCode, 0, buffer, buffer.Capacity, IntPtr.Zero);
+                return buffer.ToString().Trim();
+            }
+
+            public static void CreateFileAsHardLink(string origin, string destination)
+            {
+                bool success = CreateHardLink(destination, origin, IntPtr.Zero);
+                if (!success)
+                {
+                    int errorCode = Marshal.GetLastWin32Error();
+                    string message = GetErrorMessage(errorCode);
+                    throw new Exception(message);
+                }
+            }
+        }
+
+        private static class UnixHelper
+        {
+            // Linux API for creating hard links.
+            // Also works for macOS, but I think I need to use hunlink() to remove directories and files that are hard linked... not sure about that tho...
+            [DllImport("libc", SetLastError = true)]
+            private static extern int link(string oldpath, string newpath);
+
+            [DllImport("libc")]
+            private static extern IntPtr strerror(int errnum);
+
+            private static string GetErrorMessage(int errorCode)
+            {
+                IntPtr messagePointer = strerror(errorCode);
+                return Marshal.PtrToStringAnsi(messagePointer) ?? "Unknown error";
+            }
+
+            public static void CreateFileAsHardLink(string origin, string destination)
+            {
+                int errorCode = link(origin, destination);
+                if (errorCode != 0)
+                {
+                    string message = GetErrorMessage(errorCode);
+                    throw new Exception(message);
+                }
+            }
+        }
     }
 }
