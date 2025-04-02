@@ -9,21 +9,13 @@ namespace MagickCowModManager.Core.FileHandling
 {
     public class SimpleCopyFileHandler
     {
-        private string modsContentPath;
-        private string gameContentPath;
-        private Profile profile;
+        public SimpleCopyFileHandler()
+        { }
 
-        public SimpleCopyFileHandler(Profile profile, string modsContentPath, string gameContentPath)
+        public void InstallMods(Profile profile, string modsContentPath, string gameContentPath, FileHandlingMode handlingMode)
         {
-            this.profile = profile;
-            this.modsContentPath = modsContentPath;
-            this.gameContentPath = gameContentPath;
-        }
-
-        public void InstallMods()
-        {
-            DirectoryInfo origin = new DirectoryInfo(this.modsContentPath);
-            DirectoryInfo destination = new DirectoryInfo(this.gameContentPath);
+            DirectoryInfo origin = new DirectoryInfo(modsContentPath);
+            DirectoryInfo destination = new DirectoryInfo(gameContentPath);
             Console.WriteLine($"origin path : {origin.FullName}");
             Console.WriteLine($"destination path : {destination.FullName}");
 
@@ -32,19 +24,19 @@ namespace MagickCowModManager.Core.FileHandling
 
             Directory.CreateDirectory(destinationName);
 
-            foreach (var modName in this.profile.EnabledMods)
+            for(int i = profile.EnabledMods.Count - 1; i >= 0; --i)
             {
-                // Install Mod
+                var modName = profile.EnabledMods[i];
                 Console.WriteLine($"Installing Mod \"{modName}\"...");
 
-                string modPath = Path.Combine(this.modsContentPath, modName, "Content");
+                string modPath = Path.Combine(modsContentPath, modName, "Content");
                 DirectoryInfo originInfo = new DirectoryInfo(modPath);
 
                 ProcessDirectoryRec(originInfo, destination);
             }
         }
 
-        public void ProcessDirectoryRec(DirectoryInfo origin, DirectoryInfo destination)
+        private void ProcessDirectoryRec(DirectoryInfo origin, DirectoryInfo destination)
         {
             foreach (var file in origin.GetFiles())
             {
@@ -57,8 +49,8 @@ namespace MagickCowModManager.Core.FileHandling
                 }
                 else
                 {
-                    File.Delete(targetPath);
-                    File.CreateSymbolicLink(targetPath, file.FullName);
+                    // File.Delete(targetPath);
+                    // File.CreateSymbolicLink(targetPath, file.FullName);
                 }
             }
 
