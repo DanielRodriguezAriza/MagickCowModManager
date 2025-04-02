@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,7 +54,16 @@ namespace MagickCowModManager.Core.FileHandling
             // TODO : Find a way to implement this in both windows and linux.
             // For windows I already know what DLL and function to load, just need to find the same for linux.
             // Also add a "not supported" message / exception for any other system.
-            throw new NotImplementedException("Hard Link usage is not implemented yet!");
+            throw new NotImplementedException("Hard Link usage is not implemented yet!");   
         }
+
+        // Windows API for creating hard links.
+        [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, IntPtr lpSecurityAttributes);
+
+        // Linux API for creating hard links.
+        // Also works for macOS, but I think I need to use hunlink() to remove directories and files that are hard linked... not sure about that tho...
+        [DllImport("libc", SetLastError = true)]
+        static extern int link(string oldpath, string newpath);
     }
 }
