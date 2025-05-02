@@ -1,4 +1,4 @@
-﻿using MagickCowModManager.Core.Data;
+﻿using MagickCowModManager.Legacy.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core.FileHandling
+namespace MagickCowModManager.Legacy.Core.FileHandling
 {
     // TODO : Use this class as the file copying and handling backend. Also, make sure to rename the other "file handler" classes to something that makes more sense... they are part of the mod manager after all, maybe mod loader or something could be a good name?
     // NOTE : Maybe, in linux, automatically use symlink. On windows, default to hard link if the hard drives are the same, and then use symlink if they are not the same... could use some automatic detection shit or whatever... or just make it a manual setting...
@@ -76,21 +76,21 @@ namespace MagickCowModManager.Core.FileHandling
 
             // Windows API for creating hard links.
             [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-            private static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, IntPtr lpSecurityAttributes);
+            private static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, nint lpSecurityAttributes);
 
             [DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            private static extern int FormatMessage(int flags, IntPtr source, int messageId, int languageId, StringBuilder buffer, int size, IntPtr arguments);
+            private static extern int FormatMessage(int flags, nint source, int messageId, int languageId, StringBuilder buffer, int size, nint arguments);
 
             private static string GetErrorMessage(int errorCode)
             {
                 StringBuilder buffer = new StringBuilder(256);
-                FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, IntPtr.Zero, errorCode, 0, buffer, buffer.Capacity, IntPtr.Zero);
+                FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, nint.Zero, errorCode, 0, buffer, buffer.Capacity, nint.Zero);
                 return buffer.ToString().Trim();
             }
 
             public static void CreateFileAsHardLink(string origin, string destination)
             {
-                bool success = CreateHardLink(destination, origin, IntPtr.Zero);
+                bool success = CreateHardLink(destination, origin, nint.Zero);
                 if (!success)
                 {
                     int errorCode = Marshal.GetLastWin32Error();
@@ -108,11 +108,11 @@ namespace MagickCowModManager.Core.FileHandling
             private static extern int link(string oldpath, string newpath);
 
             [DllImport("libc")]
-            private static extern IntPtr strerror(int errnum);
+            private static extern nint strerror(int errnum);
 
             private static string GetErrorMessage(int errorCode)
             {
-                IntPtr messagePointer = strerror(errorCode);
+                nint messagePointer = strerror(errorCode);
                 return Marshal.PtrToStringAnsi(messagePointer) ?? "Unknown error";
             }
 

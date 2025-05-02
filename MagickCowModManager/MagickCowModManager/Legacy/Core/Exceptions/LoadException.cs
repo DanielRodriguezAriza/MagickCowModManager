@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core.Exceptions
+namespace MagickCowModManager.Legacy.Core.Exceptions
 {
     public class LoadException : MagickCowModManagerException
     {

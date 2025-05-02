@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core.Data
+namespace MagickCowModManager.Legacy.Core.Data
 {
     public enum FileHandlingMode
     {

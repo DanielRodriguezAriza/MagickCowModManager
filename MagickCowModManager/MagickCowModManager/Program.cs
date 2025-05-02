@@ -1,5 +1,5 @@
-﻿using MagickCowModManager.Core;
-using MagickCowModManager.Core.Exceptions;
+﻿using MagickCowModManager.Legacy.Core;
+using MagickCowModManager.Legacy.Core.Exceptions;
 
 namespace MagickCowModManager
 {

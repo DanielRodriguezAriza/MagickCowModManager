@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core.FileHandling
+namespace MagickCowModManager.Legacy.Core.FileHandling
 {
     public static class FileSystemHelper
     {

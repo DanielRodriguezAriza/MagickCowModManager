@@ -1,11 +1,11 @@
-﻿using MagickCowModManager.Core.Data;
+﻿using MagickCowModManager.Legacy.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core.FileHandling
+namespace MagickCowModManager.Legacy.Core.FileHandling
 {
     // File Handler that uses Copy operations to handle file creation
     // NOTE : For future updates: it's probably a bit faster to perform the file verification on the same step as the copy step rather than doing it in 2 different loops. But for now, this is ok. This would mean that possibly, a speedup could exist if we merged the generate and register stages together. Obviously it would be super fast if we could merge cleanup as well, which would be trivial if we had a single source / origin, but we're merging multiple source directories into a single target, which requires a lot more diffing work... all in all, check this idea out in the future when you have time.
@@ -24,21 +24,21 @@ namespace MagickCowModManager.Core.FileHandling
             this.profile = profile;
             this.modsContentPath = modsContentPath;
             this.gameContentPath = gameContentPath;
-            
-            this.directoriesToInstall = new List<string>();
-            this.filesToInstall = new List<string>();
+
+            directoriesToInstall = new List<string>();
+            filesToInstall = new List<string>();
         }
 
         public void InstallMods()
         {
-            DirectoryInfo destinationInfo = new DirectoryInfo(this.gameContentPath);
+            DirectoryInfo destinationInfo = new DirectoryInfo(gameContentPath);
 
-            foreach (var modName in this.profile.EnabledMods)
+            foreach (var modName in profile.EnabledMods)
             {
                 // Install Mod
                 Console.WriteLine($"Installing Mod \"{modName}\"...");
 
-                string modPath = Path.Combine(this.modsContentPath, modName, "Content");
+                string modPath = Path.Combine(modsContentPath, modName, "Content");
                 DirectoryInfo originInfo = new DirectoryInfo(modPath);
 
                 RegisterData(originInfo);
@@ -53,14 +53,14 @@ namespace MagickCowModManager.Core.FileHandling
         private void RegisterData(DirectoryInfo origin)
         {
             // Console.WriteLine("Registering Data...");
-            FileSystemHelper.GetChildPaths(origin, this.directoriesToInstall, this.filesToInstall);
+            FileSystemHelper.GetChildPaths(origin, directoriesToInstall, filesToInstall);
         }
 
         private void GenerateData(DirectoryInfo origin, DirectoryInfo destination)
         {
             // Console.WriteLine("Generating Data...");
 
-            foreach (var dir in this.directoriesToInstall)
+            foreach (var dir in directoriesToInstall)
             {
                 string dirToCreate = Path.Combine(destination.FullName, dir);
                 if (!Directory.Exists(dir))
@@ -69,7 +69,7 @@ namespace MagickCowModManager.Core.FileHandling
                 }
             }
 
-            foreach (var file in this.filesToInstall)
+            foreach (var file in filesToInstall)
             {
                 string fileToCopy = Path.Combine(origin.FullName, file);
                 string fileToCreate = Path.Combine(destination.FullName, file);
@@ -97,7 +97,7 @@ namespace MagickCowModManager.Core.FileHandling
 
             List<string> dirsToRemove = new List<string>();
             List<string> filesToRemove = new List<string>();
-            FileSystemHelper.GetChildPathsDiff(destination, this.directoriesToInstall, this.filesToInstall, dirsToRemove, filesToRemove);
+            FileSystemHelper.GetChildPathsDiff(destination, directoriesToInstall, filesToInstall, dirsToRemove, filesToRemove);
 
             foreach (var file in filesToRemove)
             {

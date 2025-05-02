@@ -1,11 +1,11 @@
-﻿using MagickCowModManager.Core.Data;
+﻿using MagickCowModManager.Legacy.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core
+namespace MagickCowModManager.Legacy.Core
 {
     public class FileHandler
     {
@@ -13,12 +13,12 @@ namespace MagickCowModManager.Core
 
         public FileHandler()
         {
-            this.Mode = FileHandlingMode.Copy;
+            Mode = FileHandlingMode.Copy;
         }
 
         public void EnableModFile(string origin, string destination)
         {
-            switch (this.Mode)
+            switch (Mode)
             {
                 default:
                 case FileHandlingMode.Copy:

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core.Args
+namespace MagickCowModManager.Legacy.Core.Args
 {
     public struct Command
     {
@@ -20,7 +20,7 @@ namespace MagickCowModManager.Core.Args
             get
             {
                 string argsString = "";
-                foreach (var arg in this.Arguments)
+                foreach (var arg in Arguments)
                 {
                     argsString += $"<{arg}> ";
                 }

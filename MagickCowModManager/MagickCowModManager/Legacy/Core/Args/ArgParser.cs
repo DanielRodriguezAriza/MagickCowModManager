@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MagickCowModManager.Legacy.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core.Args
+namespace MagickCowModManager.Legacy.Core.Args
 {
     public class ArgParser
     {
@@ -12,14 +13,14 @@ namespace MagickCowModManager.Core.Args
 
         public ArgParser(ModManager modManager)
         {
-            this.commandHandler = new CommandHandler(modManager);
+            commandHandler = new CommandHandler(modManager);
         }
 
         public void Parse(string[] args)
         {
             if (args.Length == 0)
             {
-                this.commandHandler.CmdHelp(args, 0);
+                commandHandler.CmdHelp(args, 0);
                 return;
             }
 
@@ -29,7 +30,7 @@ namespace MagickCowModManager.Core.Args
                 var arg = args[i];
                 bool commandFound = false;
 
-                foreach (var cmd in this.commandHandler.Commands)
+                foreach (var cmd in commandHandler.Commands)
                 {
                     if ($"-{cmd.ShortCommand}" == arg || $"--{cmd.LongCommand}" == arg)
                     {
@@ -50,7 +51,7 @@ namespace MagickCowModManager.Core.Args
                 }
             }
 
-            this.commandHandler.Run(); // Run the actions after all of the commands have been registered
+            commandHandler.Run(); // Run the actions after all of the commands have been registered
         }
     }
 }
