@@ -5,6 +5,7 @@ namespace MagickCowModManager.Legacy
 {
     public class Program
     {
+        /*
         static void Main(string[] args)
         {
             try
@@ -31,5 +32,6 @@ namespace MagickCowModManager.Legacy
                 Console.WriteLine(exception.StackTrace);
             }
         }
+        */
     }
 }

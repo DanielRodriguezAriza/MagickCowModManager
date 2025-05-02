@@ -1,11 +1,11 @@
-﻿using MagickCowModManager.Core.Data;
+﻿using MagickCowModManager.Legacy.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core.FileHandling
+namespace MagickCowModManager.Legacy.Core.FileHandling
 {
     // NOTE : Reverse load order implementation:
     // 
@@ -30,7 +30,7 @@ namespace MagickCowModManager.Core.FileHandling
 
             Directory.CreateDirectory(destinationName);
 
-            for(int i = profile.EnabledMods.Count - 1; i >= 0; --i)
+            for (int i = profile.EnabledMods.Count - 1; i >= 0; --i)
             {
                 var modName = profile.EnabledMods[i];
                 Console.WriteLine($"Installing Mod \"{modName}\"...");

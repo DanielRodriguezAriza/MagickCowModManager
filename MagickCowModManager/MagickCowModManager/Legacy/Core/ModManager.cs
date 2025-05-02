@@ -1,7 +1,7 @@
-﻿using MagickCowModManager.Core.Args;
-using MagickCowModManager.Core.Data;
-using MagickCowModManager.Core.Exceptions;
-using MagickCowModManager.Core.FileHandling;
+﻿using MagickCowModManager.Legacy.Core.Exceptions;
+using MagickCowModManager.Legacy.Core.Args;
+using MagickCowModManager.Legacy.Core.Data;
+using MagickCowModManager.Legacy.Core.FileHandling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core
+namespace MagickCowModManager.Legacy.Core
 {
     public class ModManager
     {
@@ -38,9 +38,9 @@ namespace MagickCowModManager.Core
 
         public ModManager(string modsPath, string contentPath)
         {
-            this.ModsContentPath = modsPath;
-            this.GameContentPath = contentPath;
-            this.handler = new FileHandler();
+            ModsContentPath = modsPath;
+            GameContentPath = contentPath;
+            handler = new FileHandler();
 
             // Console.WriteLine($"Mods Content Path : {this.ModsContentPath}");
             // Console.WriteLine($"Game Content Path : {this.GameContentPath}");
@@ -72,7 +72,7 @@ namespace MagickCowModManager.Core
 
             Console.WriteLine("Profiles:");
             Console.WriteLine($"  - Found: {profiles.Length}");
-            
+
             foreach (var profile in profiles)
             {
                 Console.WriteLine($"    * {profile.Name}");
@@ -96,7 +96,7 @@ namespace MagickCowModManager.Core
 
         public Profile[] GetProfiles()
         {
-            DirectoryInfo directoryInfo = new DirectoryInfo(this.ModsContentPath);
+            DirectoryInfo directoryInfo = new DirectoryInfo(ModsContentPath);
             FileInfo[] fileInfos = directoryInfo.GetFiles();
 
             List<Profile> foundProfiles = new List<Profile>();
@@ -124,7 +124,7 @@ namespace MagickCowModManager.Core
 
             Profile profile = JsonSerializer.Deserialize<Profile>(json);
             profile.Name = fileInfo.Name;
-            
+
             return profile;
         }
 
@@ -141,9 +141,9 @@ namespace MagickCowModManager.Core
         private void InstallProfile(Profile profile)
         {
             SimpleCopyFileHandler handler = new SimpleCopyFileHandler();
-            handler.InstallMods(profile, this.ModsContentPath, this.GameContentPath, FileHandlingMode.SymbolicLink);
+            handler.InstallMods(profile, ModsContentPath, GameContentPath, FileHandlingMode.SymbolicLink);
         }
-        
+
         #endregion
     }
 }

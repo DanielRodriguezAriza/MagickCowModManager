@@ -1,4 +1,4 @@
-﻿using MagickCowModManager.Core.Exceptions;
+﻿using MagickCowModManager.Legacy.Core.Exceptions;
 using MagickCowModManager.Legacy.Core;
 using System;
 using System.Collections.Generic;
