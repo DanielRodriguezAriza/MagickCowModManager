@@ -32,28 +32,6 @@ namespace MagickCowModManager.Core
             this.PathInstalls = pathInstalls;
             this.PathMods = pathMods;
             this.PathProfiles = pathProfiles;
-
-            // Check if the selected paths point to a valid mod manager data install location or not:
-            // 1) installs path
-            // 2) mods path
-            // 3) profiles path
-            // NOTE : In the future, maybe modify this to assume a single source path for the mod manager data and just havea simple error message, something like
-            // "The selected mod manager data path does not appear to be a valid install location" or whatever the fuck, idk.
-
-            if (!Directory.Exists(this.PathInstalls))
-            {
-                throw new Exception("The selected Installs path could not be found");
-            }
-
-            if (!Directory.Exists(this.PathMods))
-            {
-                throw new Exception("The selected Mods path could not be found");
-            }
-
-            if (!Directory.Exists(this.PathProfiles))
-            {
-                throw new Exception("The selected Profiles path could not be found");
-            }
         }
 
         // Constructor that allows the user to specify the path where the mod manager data is located
@@ -68,12 +46,37 @@ namespace MagickCowModManager.Core
 
         #endregion
 
+        #region Path Checking
+
+        public bool PathIsValidInstalls()
+        {
+            return Directory.Exists(this.PathInstalls);
+        }
+
+        public bool PathIsValidMods()
+        {
+            return Directory.Exists(this.PathMods);
+        }
+
+        public bool PathIsValidProfiles()
+        {
+            return Directory.Exists(this.PathProfiles);
+        }
+
+        public bool PathsAreValid()
+        {
+            return PathIsValidInstalls() && PathIsValidMods() && PathIsValidProfiles();
+        }
+
+        #endregion
+
         public void ApplyProfile(string profileFileName)
         {
             Console.WriteLine($"Installing Profile frome file \"{profileFileName}\"");
 
             string profilePathDir = Path.Combine(this.PathProfiles, profileFileName);
             string profilePathFile = Path.Combine(this.PathProfiles, profileFileName, "profile.json");
+            string profilePathManifest = Path.Combine(this.PathProfiles, profileFileName, "manifest");
 
             // Get the path to our profile
             DirectoryInfo directoryInfo = new DirectoryInfo(profilePathDir);
@@ -91,8 +94,12 @@ namespace MagickCowModManager.Core
                 throw new Exception("The specified profile is corrupted and is missing files!");
             }
 
+            // Apply the profile with the input data from the profile.json file
             var profileInfo = JsonSerializer.Deserialize<ProfileInfo>(File.ReadAllText(profilePathFile));
             ApplyProfile(profilePathDir, profileInfo);
+
+            // Create manifest file with installation date
+            CreateManifest(profilePathManifest);
         }
 
         public void ApplyProfile(string profileDirPath, ProfileInfo profileInfo)
@@ -103,6 +110,7 @@ namespace MagickCowModManager.Core
 
             // Delete old files
             FileSystemUtil.DeleteDirectory(profileGamePath);
+            Directory.CreateDirectory(profileGamePath);
 
             // Copy all files from installs to our profile
             FileSystemUtil.CopyDirectory(Path.Combine(this.PathInstalls, profileInfo.Install), profileGamePath);
@@ -112,6 +120,11 @@ namespace MagickCowModManager.Core
             {
                 FileSystemUtil.CopyDirectory(Path.Combine(PathMods, mod), profileGamePath);
             }
+        }
+
+        private void CreateManifest(string path)
+        {
+            File.WriteAllText(path, $"Installed with mcow-mm at {DateTime.Now.ToString()}");
         }
     }
 }
