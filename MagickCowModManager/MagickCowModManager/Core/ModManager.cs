@@ -8,12 +8,22 @@ namespace MagickCowModManager.Core
 {
     public class ModManager
     {
+        #region Comments
+
         // NOTE : We could enforce having all of the mod manager data located within the same directory and path and use a single string for this, but I think some
         // users will appreciate the flexibility in the long run, maybe, idk...
+
+        #endregion
+
+        #region Variables
 
         public string PathInstalls { get; set; } // Path where the base game installs are located
         public string PathMods { get; set; } // Path where the mod files are located
         public string PathProfiles { get; set; } // Path where the profiles are located
+
+        #endregion
+
+        #region Constructors
 
         // Constructor that allows the user to specify the paths for the installs, mods and profiles directories manually
         public ModManager(string pathInstalls, string pathMods, string pathProfiles)
@@ -54,5 +64,7 @@ namespace MagickCowModManager.Core
         public ModManager()
         : this("./")
         { }
+
+        #endregion
     }
 }
