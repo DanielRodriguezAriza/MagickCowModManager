@@ -72,6 +72,8 @@ namespace MagickCowModManager.Core
 
         #endregion
 
+        #region ApllyProfile
+
         public void ApplyProfile(string profileFileName)
         {
             Console.WriteLine($"Installing Profile frome file \"{profileFileName}\"");
@@ -128,5 +130,39 @@ namespace MagickCowModManager.Core
         {
             File.WriteAllText(path, $"Installed with mcow-mm at {DateTime.Now.ToString()}");
         }
+
+        #endregion
+
+        #region ListData
+
+        public void ListInstalls()
+        {
+            ListDirectories("installs", PathInstalls);
+        }
+
+        public void ListMods()
+        {
+            ListDirectories("mods", PathMods);
+        }
+
+        public void ListProfiles()
+        {
+            ListDirectories("profiles", PathProfiles);
+        }
+
+        private void ListDirectories(string name, string path)
+        {
+            DirectoryInfo directory = new DirectoryInfo(path);
+            
+            if(!directory.Exists)
+            {
+                Logger.Log(1, $"directories-not-found:{name}", Array.Empty<string>());
+                return;
+            }
+
+            Logger.Log(0, $"directories-found:{name}", FileSystemUtil.GetChildDirectoriesName(directory));
+        }
+
+        #endregion
     }
 }

@@ -23,12 +23,17 @@ namespace MagickCowModManager
             try
             {
                 ModManager modManager = new ModManager();
+
+                modManager.ListInstalls();
+                modManager.ListMods();
+                modManager.ListProfiles();
+
                 modManager.ApplyProfile(args[0]);
                 Logger.Log(0, "Successfully completed the operation!");
             }
-            catch
+            catch(Exception e)
             {
-                Logger.Log(1, "An error orcurred while running the program!");
+                Logger.Log(1, $"An error orcurred while running the program : {e.Message}", null);
             }
 
             /*if (args.Length == 2)
