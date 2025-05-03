@@ -100,6 +100,9 @@ namespace MagickCowModManager.Core
 
             // Create manifest file with installation date
             CreateManifest(profilePathManifest);
+
+            // Log Success
+            Logger.Log(0, "Success", profileInfo);
         }
 
         public void ApplyProfile(string profileDirPath, ProfileInfo profileInfo)
