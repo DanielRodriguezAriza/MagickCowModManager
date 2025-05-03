@@ -1,5 +1,4 @@
-﻿using MagickCowModManager.Legacy.Core;
-using MagickCowModManager.Legacy.Core.Exceptions;
+﻿using MagickCowModManager.Core;
 
 namespace MagickCowModManager
 {
@@ -7,29 +6,16 @@ namespace MagickCowModManager
     {
         static void Main(string[] args)
         {
-            try
-            {
-                ModManager modManager = new ModManager();
-                modManager.ParseArguments(args);
-            }
-            catch (LoadException exception)
-            {
-                Console.WriteLine($"Load Error : {exception.Message}");
-            }
-            catch (ParseException exception)
-            {
-                Console.WriteLine(exception.Message);
-            }
-            catch (CommandException exception)
-            {
-                Console.WriteLine(exception.Message);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine($"Unhandled Exception Found!");
-                Console.WriteLine(exception.Message);
-                Console.WriteLine(exception.StackTrace);
-            }
+            ModManager modManager = new ModManager();
+
+            Console.WriteLine("Installs:");
+            foreach (var x in FileSystemUtil.GetChildDirectories(modManager.PathInstalls)) Console.WriteLine($"    - {x}");
+
+            Console.WriteLine("Mods:");
+            foreach (var x in FileSystemUtil.GetChildDirectories(modManager.PathMods)) Console.WriteLine($"    - {x}");
+
+            Console.WriteLine("Profiles:");
+            foreach (var x in FileSystemUtil.GetChildDirectories(modManager.PathProfiles)) Console.WriteLine($"    - {x}");
         }
     }
 }
