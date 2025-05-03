@@ -92,18 +92,26 @@ namespace MagickCowModManager.Core
             }
 
             var profileInfo = JsonSerializer.Deserialize<ProfileInfo>(File.ReadAllText(profilePathFile));
-            ApplyProfile(profileInfo);
+            ApplyProfile(profilePathDir, profileInfo);
         }
 
-        public void ApplyProfile(ProfileInfo profileInfo)
+        public void ApplyProfile(string profileDirPath, ProfileInfo profileInfo)
         {
             Console.WriteLine($"Installing Profile \"{profileInfo.Name}\"");
 
+            string profileGamePath = Path.Combine(profileDirPath, "game");
+
+            // Delete old files
+            FileSystemUtil.DeleteDirectory(profileGamePath);
+
             // Copy all files from installs to our profile
-            // TODO : Implement
+            FileSystemUtil.CopyDirectory(Path.Combine(this.PathInstalls, profileInfo.Install), profileGamePath);
 
             // Copy all files from mods to our profile
-            // TODO : Implement
+            foreach (var mod in profileInfo.Mods.Reverse()) // NOTE : Reverse order iteration for easy mod overriding implementation
+            {
+                FileSystemUtil.CopyDirectory(Path.Combine(PathMods, mod), profileGamePath);
+            }
         }
     }
 }
