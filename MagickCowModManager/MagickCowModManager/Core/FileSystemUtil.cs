@@ -108,13 +108,15 @@ namespace MagickCowModManager.Core
 
         public static void CopyDirectory(DirectoryInfo source, DirectoryInfo destination, FileHandlingMode fileHandlingMode = FileHandlingMode.HardLink)
         {
+            // Console.WriteLine($"recursive call : {source}, {destination}");
+
             var childDirs = source.GetDirectories();
             foreach (var child in childDirs)
             {
                 string srcPath = child.FullName;
                 string dstPath = Path.Combine(destination.FullName, child.Name);
 
-                if (!child.Exists)
+                if (!Directory.Exists(dstPath))
                 {
                     Directory.CreateDirectory(dstPath);
                 }
@@ -128,7 +130,7 @@ namespace MagickCowModManager.Core
                 string srcPath = child.FullName;
                 string dstPath = Path.Combine(destination.FullName, child.Name);
 
-                if(!child.Exists)
+                if(!File.Exists(dstPath))
                 {
                     // If the file already exists, then we do not copy over it.
                     // This is important because of the way that the overriding is implemented, with the whole reverse iteration stuff, which takes advantage of this
