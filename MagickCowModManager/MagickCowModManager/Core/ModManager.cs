@@ -26,18 +26,20 @@ namespace MagickCowModManager.Core
             // 1) installs path
             // 2) mods path
             // 3) profiles path
+            // NOTE : In the future, maybe modify this to assume a single source path for the mod manager data and just havea simple error message, something like
+            // "The selected mod manager data path does not appear to be a valid install location" or whatever the fuck, idk.
 
-            if (!File.Exists(this.PathInstalls))
+            if (!Directory.Exists(this.PathInstalls))
             {
                 throw new Exception("The selected Installs path does not exist");
             }
 
-            if (!File.Exists(this.PathMods))
+            if (!Directory.Exists(this.PathMods))
             {
                 throw new Exception("The selected Mods path does not exist");
             }
 
-            if (!File.Exists(this.PathProfiles))
+            if (!Directory.Exists(this.PathProfiles))
             {
                 throw new Exception("The selected Profiles path does not exist");
             }
@@ -52,6 +54,5 @@ namespace MagickCowModManager.Core
         public ModManager()
         : this("./")
         { }
-
     }
 }
