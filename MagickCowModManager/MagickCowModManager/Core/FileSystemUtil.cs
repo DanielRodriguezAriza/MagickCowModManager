@@ -119,7 +119,7 @@ namespace MagickCowModManager.Core
                     Directory.CreateDirectory(dstPath);
                 }
 
-                CopyDirectory(srcPath, dstPath); // Recursive call
+                CopyDirectory(srcPath, dstPath, fileHandlingMode); // Recursive call
             }
 
             var childFiles = source.GetFiles();
@@ -130,7 +130,7 @@ namespace MagickCowModManager.Core
 
                 if(!child.Exists)
                 {
-                    CopyFile(srcPath, dstPath);
+                    CopyFile(srcPath, dstPath, fileHandlingMode);
                 }
             }
         }
