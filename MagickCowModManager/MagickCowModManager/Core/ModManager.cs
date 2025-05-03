@@ -31,17 +31,17 @@ namespace MagickCowModManager.Core
 
             if (!Directory.Exists(this.PathInstalls))
             {
-                throw new Exception("The selected Installs path does not exist");
+                throw new Exception("The selected Installs path could not be found");
             }
 
             if (!Directory.Exists(this.PathMods))
             {
-                throw new Exception("The selected Mods path does not exist");
+                throw new Exception("The selected Mods path could not be found");
             }
 
             if (!Directory.Exists(this.PathProfiles))
             {
-                throw new Exception("The selected Profiles path does not exist");
+                throw new Exception("The selected Profiles path could not be found");
             }
         }
 
