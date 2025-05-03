@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MagickCowModManager.Core
@@ -66,5 +67,43 @@ namespace MagickCowModManager.Core
         { }
 
         #endregion
+
+        public void ApplyProfile(string profileFileName)
+        {
+            Console.WriteLine($"Installing Profile frome file \"{profileFileName}\"");
+
+            string profilePathDir = Path.Combine(this.PathProfiles, profileFileName);
+            string profilePathFile = Path.Combine(this.PathProfiles, profileFileName, "profile.json");
+
+            // Get the path to our profile
+            DirectoryInfo directoryInfo = new DirectoryInfo(profilePathDir);
+            FileInfo fileInfo = new FileInfo(profilePathFile);
+
+            // Handle the case where the profile directory does not exist
+            if (!directoryInfo.Exists)
+            {
+                throw new Exception("The specified profile does not exist!");
+            }
+
+            // Handle the case where the profile file does not exist
+            if (!fileInfo.Exists)
+            {
+                throw new Exception("The specified profile is corrupted and is missing files!");
+            }
+
+            var profileInfo = JsonSerializer.Deserialize<ProfileInfo>(File.ReadAllText(profilePathFile));
+            ApplyProfile(profileInfo);
+        }
+
+        public void ApplyProfile(ProfileInfo profileInfo)
+        {
+            Console.WriteLine($"Installing Profile \"{profileInfo.Name}\"");
+
+            // Copy all files from installs to our profile
+            // TODO : Implement
+
+            // Copy all files from mods to our profile
+            // TODO : Implement
+        }
     }
 }
