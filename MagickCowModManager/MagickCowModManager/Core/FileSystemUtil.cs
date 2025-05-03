@@ -130,6 +130,9 @@ namespace MagickCowModManager.Core
 
                 if(!child.Exists)
                 {
+                    // If the file already exists, then we do not copy over it.
+                    // This is important because of the way that the overriding is implemented, with the whole reverse iteration stuff, which takes advantage of this
+                    // behaviour, reducing the number of calls to file system operations.
                     CopyFile(srcPath, dstPath, fileHandlingMode);
                 }
             }
