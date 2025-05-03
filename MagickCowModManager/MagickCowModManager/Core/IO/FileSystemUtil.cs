@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MagickCowModManager.Core.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core
+namespace MagickCowModManager.Core.IO
 {
     public static class FileSystemUtil
     {
@@ -130,7 +131,7 @@ namespace MagickCowModManager.Core
                 string srcPath = child.FullName;
                 string dstPath = Path.Combine(destination.FullName, child.Name);
 
-                if(!File.Exists(dstPath))
+                if (!File.Exists(dstPath))
                 {
                     // If the file already exists, then we do not copy over it.
                     // This is important because of the way that the overriding is implemented, with the whole reverse iteration stuff, which takes advantage of this

@@ -1,4 +1,5 @@
 ﻿using MagickCowModManager.Core;
+using MagickCowModManager.Core.IO;
 
 namespace MagickCowModManager
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core
+namespace MagickCowModManager.Core.Data
 {
     public struct ProfileInfo
     {
@@ -14,9 +14,9 @@ namespace MagickCowModManager.Core
 
         public ProfileInfo()
         {
-            this.Name = "New Profile";
-            this.Install = "Magicka";
-            this.Mods = Array.Empty<string>();
+            Name = "New Profile";
+            Install = "Magicka";
+            Mods = Array.Empty<string>();
         }
     }
 }

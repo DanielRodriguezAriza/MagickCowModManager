@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagickCowModManager.Core
+namespace MagickCowModManager.Core.Data
 {
     public struct AuthorInfo
     {
@@ -13,26 +13,26 @@ namespace MagickCowModManager.Core
 
         public AuthorInfo()
         {
-            this.Name = string.Empty;
-            this.Contacts = Array.Empty<string>();
+            Name = string.Empty;
+            Contacts = Array.Empty<string>();
         }
 
         public AuthorInfo(string name, string[] contacts)
         {
-            this.Name = name;
-            this.Contacts = contacts;
+            Name = name;
+            Contacts = contacts;
         }
 
         public AuthorInfo(string name, string contact)
         {
-            this.Name = name;
-            this.Contacts = new[] { contact };
+            Name = name;
+            Contacts = new[] { contact };
         }
 
         public AuthorInfo(string name)
         {
-            this.Name = name;
-            this.Contacts = Array.Empty<string>();
+            Name = name;
+            Contacts = Array.Empty<string>();
         }
     }
 }
