@@ -91,7 +91,76 @@ namespace MagickCowModManager.Core
 
         public static void CopyFile(string source, string destination, FileHandlingMode fileHandlingMode = FileHandlingMode.HardLink)
         {
-            FileOps.CopyFile(source, destination, fileHandlingMode);
+            CopyFile(new FileInfo(source), new FileInfo(destination), fileHandlingMode);
+        }
+
+        public static void CopyFile(FileInfo source, FileInfo destination, FileHandlingMode fileHnadlingMode = FileHandlingMode.HardLink)
+        {
+            FileOps.CopyFile(source.FullName, destination.FullName, fileHnadlingMode);
+        }
+
+        public static void CopyDirectory(string source, string destination, FileHandlingMode fileHandlingMode = FileHandlingMode.HardLink)
+        {
+            DirectoryInfo directoryInfoSrc = new DirectoryInfo(source);
+            DirectoryInfo directoryInfoDst = new DirectoryInfo(destination);
+            CopyDirectory(directoryInfoSrc, directoryInfoDst, fileHandlingMode);
+        }
+
+        public static void CopyDirectory(DirectoryInfo source, DirectoryInfo destination, FileHandlingMode fileHandlingMode = FileHandlingMode.HardLink)
+        {
+            var childDirs = source.GetDirectories();
+            foreach (var child in childDirs)
+            {
+                string srcPath = child.FullName;
+                string dstPath = Path.Combine(destination.FullName, child.Name);
+
+                if (!child.Exists)
+                {
+                    Directory.CreateDirectory(dstPath);
+                }
+
+                CopyDirectory(srcPath, dstPath); // Recursive call
+            }
+
+            var childFiles = source.GetFiles();
+            foreach (var child in childFiles)
+            {
+                string srcPath = child.FullName;
+                string dstPath = Path.Combine(destination.FullName, child.Name);
+
+                if(!child.Exists)
+                {
+                    CopyFile(srcPath, dstPath);
+                }
+            }
+        }
+
+        public static void DeleteDirectory(string path)
+        {
+            DeleteDirectory(new DirectoryInfo(path));
+        }
+
+        public static void DeleteDirectory(DirectoryInfo path)
+        {
+            var childDirs = path.GetDirectories();
+            foreach (var child in childDirs)
+            {
+                DeleteDirectory(child);
+            }
+
+            if (!File.Exists(Path.Combine(path.FullName, ".preserve")))
+            {
+                // Directory.Delete() calls in C# only delete if the directory is empty, but just in case this
+                // behaviour is not preserved in future updates, we add our own check first, just to be sure.
+                
+                var childDirsLatest = path.GetDirectories();
+                var childFilesLatest = path.GetFiles();
+
+                if (childDirsLatest.Length <= 0 && childFilesLatest.Length <= 0)
+                {
+                    Directory.Delete(path.FullName);
+                }
+            }
         }
 
         private static class FileOps
