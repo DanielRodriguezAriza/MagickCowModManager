@@ -142,25 +142,37 @@ namespace MagickCowModManager.Core
 
         public static void DeleteDirectory(DirectoryInfo path)
         {
+            if (!path.Exists)
+            {
+                return; // Can't delete a dir that does not exist, so we just bail out.
+            }
+
             var childDirs = path.GetDirectories();
             foreach (var child in childDirs)
             {
                 DeleteDirectory(child);
             }
 
-            if (!File.Exists(Path.Combine(path.FullName, ".preserve")))
+            // The ".preserve" file indicates that the current directory is to be preserved
+            bool shouldPreserve = File.Exists(Path.Combine(path.FullName, ".preserve"));
+            if (shouldPreserve)
             {
-                // Directory.Delete() calls in C# only delete if the directory is empty, but just in case this
-                // behaviour is not preserved in future updates, we add our own check first, just to be sure.
-                
-                var childDirsLatest = path.GetDirectories();
-                var childFilesLatest = path.GetFiles();
-
-                if (childDirsLatest.Length <= 0 && childFilesLatest.Length <= 0)
-                {
-                    Directory.Delete(path.FullName);
-                }
+                return;
             }
+
+            // Directory.Delete() calls in C# only delete if the directory is empty, but just in case this
+            // behaviour is not preserved in future updates, we add our own check first, just to be sure
+            var childDirsLatest = path.GetDirectories();
+            var childFilesLatest = path.GetFiles();
+            bool anyChildrenLeft = childDirsLatest.Length > 0 || childFilesLatest.Length > 0;
+            if (anyChildrenLeft)
+            {
+                // If any children are left on the directory, we can't delete it, because that means
+                // that at least one of the children on this directory structure has a ".preserve" file present with it.
+                return;
+            }
+
+            Directory.Delete(path.FullName);
         }
 
         private static class FileOps
