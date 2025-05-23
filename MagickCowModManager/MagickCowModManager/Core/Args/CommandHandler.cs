@@ -1,5 +1,4 @@
-﻿using MagickCowModManager.Legacy.Core.Exceptions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -132,21 +131,21 @@ namespace MagickCowModManager.Core.Args
         void CmdSetPathToInstalls(string[] args, int index)
         {
             if (cmdvar_SetPathToInstalls)
-                throw new CommandException("Path to installs cannot be set more than once in a single call!");
+                throw new Exception("Path to installs cannot be set more than once in a single call!");
             cmdvar_PathToInstalls = args[index + 1];
         }
 
         void CmdSetPathToMods(string[] args, int index)
         {
             if (cmdvar_SetPathToMods)
-                throw new CommandException("Path to mods cannot be set more than once in a single call!");
+                throw new Exception("Path to mods cannot be set more than once in a single call!");
             cmdvar_PathToMods = args[index + 1];
         }
 
         void CmdSetPathToProfiles(string[] args, int index)
         {
             if (cmdvar_SetPathToProfiles)
-                throw new CommandException("Path to profiles cannot be set more than once in a single call!");
+                throw new Exception("Path to profiles cannot be set more than once in a single call!");
             cmdvar_PathToProfiles = args[index + 1];
         }
 
