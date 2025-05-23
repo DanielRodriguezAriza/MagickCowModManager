@@ -24,6 +24,62 @@ namespace MagickCowModManager.Core.Args
                     Description = "Display this help message",
                     Function = CmdHelp
                 },
+                new Command
+                {
+                    ShortCommand = "pi",
+                    LongCommand = "set-path-to-installs",
+                    Arguments = ["path-to-installs"],
+                    Description = "Set the path where the base game installs are located",
+                    Function = CmdSetPathToInstalls
+                },
+                new Command
+                {
+                    ShortCommand = "pm",
+                    LongCommand = "set-path-to-mods",
+                    Arguments = ["path-to-mods"],
+                    Description = "Set the path where the mods are located",
+                    Function = CmdSetPathToMods
+                },
+                new Command
+                {
+                    ShortCommand = "pp",
+                    LongCommand = "set-path-to-profiles",
+                    Arguments = ["path-to-profiles"],
+                    Description = "Set the path where the profiles are located",
+                    Function = CmdSetPathToProfiles
+                },
+                new Command
+                {
+                    ShortCommand = "li",
+                    LongCommand = "list-installs",
+                    Arguments = [],
+                    Description = "Display the list of all the installs found within the installs directory",
+                    Function = CmdListInstalls
+                },
+                new Command
+                {
+                    ShortCommand = "lm",
+                    LongCommand = "list-mods",
+                    Arguments = [],
+                    Description = "Display the list of all mods found within the mods directory",
+                    Function = CmdListMods
+                },
+                new Command
+                {
+                    ShortCommand = "lp",
+                    LongCommand = "list-profiles",
+                    Arguments = [],
+                    Description = "Display the list of all profiles found within the profiles directory",
+                    Function = CmdListProfiles
+                },
+                new Command
+                {
+                    ShortCommand = "a",
+                    LongCommand = "apply-profile",
+                    Arguments = ["profile-name"],
+                    Description = "Apply a profile, generates the final game files with the selected base install and mods",
+                    Function = CmdApplyProfile
+                },
             ];
         }
 
