@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace MagickCowModManager.Core
 {
     // This class is in charge of controlling the top-level logic of the mod manager program for the command-line interface.
-    // Basically, this is the top-level class of the mcow-mm cli program
+    // Basically, this is the top-level class of the mcow-mm cli program.
 
     public class ModManagerProgram
     {

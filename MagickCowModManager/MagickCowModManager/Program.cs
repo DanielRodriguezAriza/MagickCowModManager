@@ -10,19 +10,19 @@ namespace MagickCowModManager
         {
             try
             {
-                ModManager modManager = new ModManager();
-                CommandHandler commandHandler = new CommandHandler(modManager);
-                ArgParser argParser = new ArgParser(commandHandler);
+                ModManagerProgram modManager = new ModManagerProgram();
+                modManager.Run(args);
 
-                argParser.ParseAndExecute(args);
-
-                Logger.Log(0, "Successfully completed the operation!");
+                // Logger.Log(0, "Successfully completed the operation!");
 
                 return 0;
             }
             catch(Exception e)
             {
-                Logger.Log(1, $"An error orcurred while running the program : {e.Message}", null);
+                // Logger.Log(1, $"An error orcurred while running the program : {e.Message}", null);
+
+                Console.WriteLine($"An error ocurred while running the program : \"{e.Message}\"");
+                Console.WriteLine($"Stack trace : {e.StackTrace}");
 
                 return 1;
             }
