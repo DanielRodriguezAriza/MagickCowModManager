@@ -15,6 +15,27 @@ namespace MagickCowModManager.Core.Args
 
         #endregion
 
+        #region Command Variables
+
+        private bool cmdvar_Help;
+
+        private bool cmdvar_SetPathToInstalls;
+        private bool cmdvar_SetPathToMods;
+        private bool cmdvar_SetPathToProfiles;
+
+        private string cmdvar_PathToInstalls;
+        private string cmdvar_PathToMods;
+        private string cmdvar_PathToProfiles;
+
+        private bool cmdvar_ListInstalls;
+        private bool cmdvar_ListMods;
+        private bool cmdvar_ListProfiles;
+
+        private bool cmdvar_ApplyProfile;
+        private string cmdvar_Profile;
+
+        #endregion
+
         #region Constructor
 
         public CommandHandler(ModManager modManager)
@@ -146,5 +167,30 @@ namespace MagickCowModManager.Core.Args
         }
 
         #endregion
+
+        // Command to execute the logic once all of the commands have been registered.
+        public void Execute()
+        {
+            // NEVER run any commands if the help command was used.
+            if (cmdvar_Help)
+                return;
+
+            // Set the path variables
+            ModManager.PathInstalls = cmdvar_PathToInstalls;
+            ModManager.PathMods = cmdvar_PathToMods;
+            ModManager.PathProfiles = cmdvar_PathToProfiles;
+
+            // Execute list commands if required
+            if (cmdvar_ListInstalls)
+                ModManager.ListInstalls();
+            if (cmdvar_ListMods)
+                ModManager.ListMods();
+            if (cmdvar_ListProfiles)
+                ModManager.ListProfiles();
+
+            // Apply profile if required
+            if (cmdvar_ApplyProfile)
+                ModManager.ApplyProfile(cmdvar_Profile);
+        }
     }
 }
