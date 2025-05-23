@@ -197,10 +197,13 @@ namespace MagickCowModManager.Core.Args
             if (cmdvar_Help)
                 return;
 
-            // Set the path variables
-            ModManager.PathInstalls = cmdvar_PathToInstalls;
-            ModManager.PathMods = cmdvar_PathToMods;
-            ModManager.PathProfiles = cmdvar_PathToProfiles;
+            // Set the path variables if required
+            if(cmdvar_SetPathToInstalls)
+                ModManager.PathInstalls = cmdvar_PathToInstalls;
+            if(cmdvar_SetPathToMods)
+                ModManager.PathMods = cmdvar_PathToMods;
+            if(cmdvar_SetPathToProfiles)
+                ModManager.PathProfiles = cmdvar_PathToProfiles;
 
             // Execute list commands if required
             if (cmdvar_ListInstalls)
