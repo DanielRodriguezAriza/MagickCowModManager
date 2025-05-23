@@ -116,7 +116,12 @@ namespace MagickCowModManager.Core.Args
 
         public void CmdHelp(string[] args, int index)
         {
-            // TODO : Implement
+            cmdvar_Help = true;
+            Print($"Usage : mcow-mm [OPTIONS] <ARGS>");
+            foreach (var cmd in Commands)
+            {
+                Print($"    -{cmd.ShortCommand}, --{cmd.LongCommand} {cmd.ArgumentsString}{cmd.Description}");
+            }
         }
 
         #endregion
@@ -167,6 +172,11 @@ namespace MagickCowModManager.Core.Args
         }
 
         #endregion
+
+        private void Print(string msg)
+        {
+            Console.WriteLine(msg);
+        }
 
         // Command to execute the logic once all of the commands have been registered.
         public void Execute()
