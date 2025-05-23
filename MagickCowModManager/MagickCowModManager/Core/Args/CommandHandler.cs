@@ -8,8 +8,14 @@ namespace MagickCowModManager.Core.Args
 {
     public class CommandHandler
     {
+        #region Variables
+
         public ModManager ModManager { get; set; } // Reference to a mod manager instance. Could really just be instantiated inside of this class directly, but we do it like this just in case that the ModManager class adds some statefullness in the future, which would make requiring an instance as a sort of context make sense.
         public Command[] Commands { get; set; } // List of known commands. Could use a list in the future so that it can be modified with custom commands from the outside in case any users want to add custom commands.
+
+        #endregion
+
+        #region Constructor
 
         public CommandHandler(ModManager modManager)
         {
@@ -83,7 +89,9 @@ namespace MagickCowModManager.Core.Args
             ];
         }
 
-        #region Cmd - Utility
+        #endregion
+
+        #region CmdHelp
 
         public void CmdHelp(string[] args, int index)
         {
