@@ -106,5 +106,24 @@ namespace MagickCowModManager.Core.Args
         }
 
         #endregion
+
+        #region CmdList
+
+        void CmdListInstalls(string[] args, int index)
+        {
+            // TODO : Implement
+        }
+
+        void CmdListMods(string[] args, int index)
+        {
+            // TODO : Implement
+        }
+
+        void CmdListProfiles(string[] args, int index)
+        {
+            // TODO : Implement
+        }
+
+        #endregion
     }
 }
