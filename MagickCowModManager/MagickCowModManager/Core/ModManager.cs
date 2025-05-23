@@ -74,56 +74,50 @@ namespace MagickCowModManager.Core
 
         #region ApllyProfile
 
-        public void ApplyProfile(string profileFileName)
+        public void ApplyProfile(string profileDir)
         {
-            Console.WriteLine($"Installing Profile frome file \"{profileFileName}\"");
+            ApplyProfile(PathInstalls, PathMods, PathProfiles, profileDir, true);
+        }
 
-            string profilePathDir = Path.Combine(this.PathProfiles, profileFileName);
-            string profilePathFile = Path.Combine(this.PathProfiles, profileFileName, "profile.json");
-            string profilePathManifest = Path.Combine(this.PathProfiles, profileFileName, "manifest");
+        public void ApplyProfile(string pathToInstalls, string pathToMods, string pathToProfiles, string profileDir, bool handleManifest)
+        {
+            // Debug log
+            Console.WriteLine($"Installing Profile from directory \"{profileDir}\"");
 
-            // Get the path to our profile
-            DirectoryInfo directoryInfo = new DirectoryInfo(profilePathDir);
-            FileInfo fileInfo = new FileInfo(profilePathFile);
+            // Create path strings
+            string pathToProfileDir = Path.Combine(pathToProfiles, profileDir);
+            string pathToProfileFile = Path.Combine(pathToProfiles, profileDir, "profile.json");
+            string pathToProfileManifest = Path.Combine(pathToProfiles, profileDir, "manifest");
+            string pathToProfileGameDir = Path.Combine(pathToProfiles, profileDir, "game");
 
             // Handle the case where the profile directory does not exist
-            if (!directoryInfo.Exists)
+            if (!Directory.Exists(pathToProfileDir))
             {
                 throw new Exception("The specified profile does not exist!");
             }
 
             // Handle the case where the profile file does not exist
-            if (!fileInfo.Exists)
+            if (!File.Exists(pathToProfileFile))
             {
                 throw new Exception("The specified profile is corrupted and is missing files!");
             }
 
-            // Apply the profile with the input data from the profile.json file
-            var profileInfo = JsonSerializer.Deserialize<ProfileInfo>(File.ReadAllText(profilePathFile));
-            ApplyProfile(profilePathDir, profileInfo);
+            // Load profile data from the profile.json file
+            Console.WriteLine("    - Loading Profile Data from \"profile.json\"");
+            ProfileInfo profileInfo = JsonSerializer.Deserialize<ProfileInfo>(File.ReadAllText(pathToProfileFile));
+            Console.WriteLine($"    - Profile Data loaded from \"profile.json\"");
 
-            // Create manifest file with installation date
-            CreateManifest(profilePathManifest);
-        }
+            // Delete the last generated manifest file and game directory
+            Console.WriteLine("    - Cleaning up old files...");
+            if(handleManifest)
+                DeleteManifest(pathToProfileManifest);
+            DeleteGameFiles(pathToProfileGameDir);
 
-        public void ApplyProfile(string profileDirPath, ProfileInfo profileInfo)
-        {
-            Console.WriteLine($"Installing Profile \"{profileInfo.Name}\"");
-
-            string profileGamePath = Path.Combine(profileDirPath, "game");
-
-            // Delete old files
-            FileSystemUtil.DeleteDirectory(profileGamePath);
-            Directory.CreateDirectory(profileGamePath);
-
-            // Copy all files from installs to our profile
-            FileSystemUtil.CopyDirectory(Path.Combine(this.PathInstalls, profileInfo.Install), profileGamePath);
-
-            // Copy all files from mods to our profile
-            foreach (var mod in profileInfo.Mods.Reverse()) // NOTE : Reverse order iteration for easy mod overriding implementation
-            {
-                FileSystemUtil.CopyDirectory(Path.Combine(PathMods, mod), profileGamePath);
-            }
+            // Generate the new game files and manifest
+            Console.WriteLine($"    - Generating files for profile named \"{profileInfo.Name}\" from directory \"{profileDir}\"");
+            CreateGameFiles(pathToInstalls, pathToMods, pathToProfileGameDir, profileInfo);
+            if(handleManifest)
+                CreateManifest(pathToProfileManifest);
         }
 
         private void CreateManifest(string path)
@@ -134,6 +128,28 @@ namespace MagickCowModManager.Core
         private void DeleteManifest(string path)
         {
             File.Delete(path);
+        }
+
+        private void CreateGameFiles(string pathToInstalls, string pathToMods, string pathToProfileGameDir, ProfileInfo profileInfo)
+        {
+            // Create the directory if it does not exist already
+            if (!Directory.Exists(pathToProfileGameDir))
+                Directory.CreateDirectory(pathToProfileGameDir);
+
+            // Copy the base install
+            FileSystemUtil.CopyDirectory(Path.Combine(pathToInstalls, profileInfo.Install), pathToProfileGameDir);
+
+            // Copy all of the mod files
+            // NOTE : Reverse order iteration for easy mod overriding implementation
+            foreach (var mod in profileInfo.Mods.Reverse())
+            {
+                FileSystemUtil.CopyDirectory(Path.Combine(pathToMods, mod), pathToProfileGameDir);
+            }
+        }
+
+        private void DeleteGameFiles(string dir)
+        {
+            FileSystemUtil.DeleteDirectory(dir);
         }
 
         #endregion
