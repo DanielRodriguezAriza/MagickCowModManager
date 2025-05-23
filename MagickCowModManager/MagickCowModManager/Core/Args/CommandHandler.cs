@@ -83,10 +83,14 @@ namespace MagickCowModManager.Core.Args
             ];
         }
 
+        #region Cmd - Utility
+
         public void CmdHelp(string[] args, int index)
         {
             // TODO : Implement
         }
+
+        #endregion
 
         #region CmdSetPath
 
@@ -120,6 +124,15 @@ namespace MagickCowModManager.Core.Args
         }
 
         void CmdListProfiles(string[] args, int index)
+        {
+            // TODO : Implement
+        }
+
+        #endregion
+
+        #region CmdApply
+
+        void CmdApplyProfile(string[] args, int index)
         {
             // TODO : Implement
         }
