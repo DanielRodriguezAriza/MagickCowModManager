@@ -7,19 +7,6 @@ namespace MagickCowModManager
     {
         static void Main(string[] args)
         {
-            /*
-            ModManager modManager = new ModManager();
-
-            Console.WriteLine("Installs:");
-            foreach (var x in FileSystemUtil.GetChildDirectoriesName(modManager.PathInstalls)) Console.WriteLine($"    - {x}");
-
-            Console.WriteLine("Mods:");
-            foreach (var x in FileSystemUtil.GetChildDirectoriesName(modManager.PathMods)) Console.WriteLine($"    - {x}");
-
-            Console.WriteLine("Profiles:");
-            foreach (var x in FileSystemUtil.GetChildDirectoriesName(modManager.PathProfiles)) Console.WriteLine($"    - {x}");
-            */
-
             try
             {
                 ModManager modManager = new ModManager();
@@ -35,16 +22,6 @@ namespace MagickCowModManager
             {
                 Logger.Log(1, $"An error orcurred while running the program : {e.Message}", null);
             }
-
-            /*if (args.Length == 2)
-            {
-                FileSystemUtil.CopyFile(args[0], args[1]);
-                Console.WriteLine("Created hard link");
-            }
-            else
-            {
-                Console.WriteLine("Wrong number of args");
-            }*/
         }
     }
 }
