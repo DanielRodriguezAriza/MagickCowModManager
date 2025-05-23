@@ -1,4 +1,5 @@
 ﻿using MagickCowModManager.Core;
+using MagickCowModManager.Core.Args;
 using MagickCowModManager.Core.IO;
 
 namespace MagickCowModManager
@@ -10,12 +11,11 @@ namespace MagickCowModManager
             try
             {
                 ModManager modManager = new ModManager();
+                CommandHandler commandHandler = new CommandHandler(modManager);
+                ArgParser argParser = new ArgParser(commandHandler);
 
-                modManager.ListInstalls();
-                modManager.ListMods();
-                modManager.ListProfiles();
+                argParser.ParseAndExecute(args);
 
-                modManager.ApplyProfile(args[0]);
                 Logger.Log(0, "Successfully completed the operation!");
 
                 return 0;
