@@ -180,7 +180,10 @@ namespace MagickCowModManager.Core.Args
 
         void CmdApplyProfile(string[] args, int index)
         {
-            // TODO : Implement
+            if (cmdvar_ApplyProfile)
+                throw new Exception("Cannot apply multiple profiles in a single call!");
+            cmdvar_ApplyProfile = true;
+            cmdvar_Profile = args[index + 1];
         }
 
         #endregion
