@@ -155,17 +155,23 @@ namespace MagickCowModManager.Core.Args
 
         void CmdListInstalls(string[] args, int index)
         {
-            // TODO : Implement
+            if (cmdvar_ListInstalls)
+                throw new Exception("List installs has already been invoked!");
+            cmdvar_ListInstalls = true;
         }
 
         void CmdListMods(string[] args, int index)
         {
-            // TODO : Implement
+            if (cmdvar_ListMods)
+                throw new Exception("List mods has already been invoked!");
+            cmdvar_ListMods = true;
         }
 
         void CmdListProfiles(string[] args, int index)
         {
-            // TODO : Implement
+            if (cmdvar_ListProfiles)
+                throw new Exception("List profiles has already been invoked!");
+            cmdvar_ListProfiles = true;
         }
 
         #endregion
