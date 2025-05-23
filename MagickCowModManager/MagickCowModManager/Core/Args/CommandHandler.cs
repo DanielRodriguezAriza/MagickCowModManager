@@ -87,5 +87,24 @@ namespace MagickCowModManager.Core.Args
         {
             // TODO : Implement
         }
+
+        #region CmdSetPath
+
+        void CmdSetPathToInstalls(string[] args, int index)
+        {
+            // TODO : Implement
+        }
+
+        void CmdSetPathToMods(string[] args, int index)
+        {
+            // TODO : Implement
+        }
+
+        void CmdSetPathToProfiles(string[] args, int index)
+        {
+            // TODO : Implement
+        }
+
+        #endregion
     }
 }
