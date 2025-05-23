@@ -131,6 +131,11 @@ namespace MagickCowModManager.Core
             File.WriteAllText(path, $"Installed with mcow-mm at {DateTime.Now.ToString()}");
         }
 
+        private void DeleteManifest(string path)
+        {
+            File.Delete(path);
+        }
+
         #endregion
 
         #region ListData
