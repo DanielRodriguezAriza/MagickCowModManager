@@ -236,7 +236,9 @@ namespace MagickCowModManager.Core.Args
             cmdvar_ProfilesToApply.Clear();
 
             // Rebuild profiles
-            // TODO : Implement
+            foreach (var profile in cmdvar_ProfilesToRebuild)
+                if (ModManager.DoesProfileManifestExist(profile))
+                    ModManager.ApplyProfile(profile);
         }
     }
 }
