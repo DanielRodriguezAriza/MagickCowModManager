@@ -79,12 +79,12 @@ namespace MagickCowModManager.Core
 
         #region ApplyProfile
 
-        public void ApplyProfile(string profileDir)
+        public void ApplyProfile(string profileDir, bool forceRebuild = true)
         {
-            ApplyProfile(PathInstalls, PathMods, PathProfiles, profileDir, true);
+            ApplyProfile(PathInstalls, PathMods, PathProfiles, profileDir, true, forceRebuild);
         }
 
-        public void ApplyProfile(string pathToInstalls, string pathToMods, string pathToProfiles, string profileDir, bool handleManifest)
+        public void ApplyProfile(string pathToInstalls, string pathToMods, string pathToProfiles, string profileDir, bool handleManifest, bool forceRebuild)
         {
             // Debug log
             Console.WriteLine($"Installing Profile from directory \"{profileDir}\"");
@@ -105,6 +105,17 @@ namespace MagickCowModManager.Core
             if (!File.Exists(pathToProfileFile))
             {
                 throw new Exception("The specified profile is corrupted and is missing files!");
+            }
+
+            // If the manifest file is preset and we are not allowed to rebuild existing profiles, then bail out
+            // because the profile is already built.
+            // NOTE : Force rebuild is set to true by default so that a simple call to ApplyProfile() will always
+            // generate fresh profile files unless we say otherwise. The expected default behaviour should be that
+            // applying a profile should re-generate its files to the latest version of the files in case that
+            // either mcow-mm is updated or that the mod and install files are changed.
+            if (File.Exists(pathToProfileManifest) && !forceRebuild)
+            {
+                return;
             }
 
             // Load profile data from the profile.json file
