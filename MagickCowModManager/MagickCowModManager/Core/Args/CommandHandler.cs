@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -107,6 +108,14 @@ namespace MagickCowModManager.Core.Args
                     Description = "Apply a profile, generates the final game files with the selected base install and mods",
                     Function = CmdApplyProfile
                 },
+                new Command
+                {
+                    ShortCommand = "r",
+                    LongCommand = "rebuild-profile",
+                    Arguments = ["profile-name", "force-rebuild"],
+                    Description = "Rebuild a profile with. If the manifest file is not up to date, the project will be rebuilt. Otherwise, the profile will not be modified.",
+                    Function = CmdRebuildProfile,
+                }
             ];
         }
 
@@ -184,6 +193,15 @@ namespace MagickCowModManager.Core.Args
                 throw new Exception("Cannot apply multiple profiles in a single call!");
             cmdvar_ApplyProfile = true;
             cmdvar_Profile = args[index + 1];
+        }
+
+        void CmdRebuildProfile(string[] args, int index)
+        {
+            if (cmdvar_ApplyProfile)
+                throw new Exception("Cannot apply multiple profiles in a single call!");
+            cmdvar_ApplyProfile = true;
+            cmdvar_Profile = args[index + 1];
+            // TODO : Implement rebuild logic here
         }
 
         #endregion
