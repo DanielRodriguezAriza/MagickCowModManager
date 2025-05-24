@@ -41,6 +41,7 @@ namespace MagickCowModManager.Core.Args
 
         public CommandHandler(ModManager modManager)
         {
+            // Initialize mod manager reference and list of commands
             ModManager = modManager;
             Commands =
             [
@@ -117,6 +118,24 @@ namespace MagickCowModManager.Core.Args
                     Function = CmdRebuildProfile,
                 }
             ];
+
+            //Initialize cmdvar_ variables
+            cmdvar_Help = false;
+
+            cmdvar_SetPathToInstalls = false;
+            cmdvar_SetPathToMods = false;
+            cmdvar_SetPathToProfiles = false;
+
+            cmdvar_PathToInstalls = string.Empty;
+            cmdvar_PathToMods = string.Empty;
+            cmdvar_PathToProfiles = string.Empty;
+
+            cmdvar_ListInstalls = false;
+            cmdvar_ListMods = false;
+            cmdvar_ListProfiles = false;
+
+            cmdvar_ProfilesToApply = [];
+            cmdvar_ProfilesToRebuild = [];
         }
 
         #endregion
