@@ -107,15 +107,23 @@ namespace MagickCowModManager.Core
                 throw new Exception("The specified profile is corrupted and is missing files!");
             }
 
-            // If the manifest file is preset and we are not allowed to rebuild existing profiles, then bail out
-            // because the profile is already built.
-            // NOTE : Force rebuild is set to true by default so that a simple call to ApplyProfile() will always
-            // generate fresh profile files unless we say otherwise. The expected default behaviour should be that
-            // applying a profile should re-generate its files to the latest version of the files in case that
-            // either mcow-mm is updated or that the mod and install files are changed.
-            if (File.Exists(pathToProfileManifest) && !forceRebuild)
+            
+            // If forceRebuild is false then only rebuild either if the manifest does not exist or if the manifest
+            // exists but the profile.json file has been edited at a later date.
+            if (!forceRebuild)
             {
-                return;
+                // NOTE : If the manifest does not exist, then that means that the profile data was not generated.
+                // This can happen if the profile generation process is interrupted half way through or it has not been
+                // executed yet.
+                if (File.Exists(pathToProfileManifest))
+                {
+                    var creationDateManifest = File.GetCreationTime(pathToProfileManifest);
+                    var creationDateJson = File.GetCreationTime(pathToProfileFile);
+                    if (creationDateManifest > creationDateJson)
+                    {
+                        return;
+                    }
+                }
             }
 
             // Load profile data from the profile.json file
