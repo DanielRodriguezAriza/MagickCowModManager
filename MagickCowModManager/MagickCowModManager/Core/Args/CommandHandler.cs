@@ -232,13 +232,13 @@ namespace MagickCowModManager.Core.Args
 
             // Apply profiles
             foreach (var profile in cmdvar_ProfilesToApply)
-                ModManager.ApplyProfile(profile);
+                ModManager.ApplyProfile(profile, true);
             cmdvar_ProfilesToApply.Clear();
 
             // Rebuild profiles
             foreach (var profile in cmdvar_ProfilesToRebuild)
-                if (ModManager.DoesProfileManifestExist(profile))
-                    ModManager.ApplyProfile(profile);
+                ModManager.ApplyProfile(profile, false);
+            cmdvar_ProfilesToRebuild.Clear();
         }
     }
 }
