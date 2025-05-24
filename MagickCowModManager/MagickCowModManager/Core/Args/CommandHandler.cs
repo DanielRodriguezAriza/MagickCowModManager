@@ -32,8 +32,8 @@ namespace MagickCowModManager.Core.Args
         private bool cmdvar_ListMods;
         private bool cmdvar_ListProfiles;
 
-        private bool cmdvar_ApplyProfile;
-        private string cmdvar_Profile;
+        private List<string> cmdvar_ProfilesToApply;
+        private List<string> cmdvar_ProfilesToRebuild;
 
         #endregion
 
@@ -112,8 +112,8 @@ namespace MagickCowModManager.Core.Args
                 {
                     ShortCommand = "r",
                     LongCommand = "rebuild-profile",
-                    Arguments = ["profile-name", "force-rebuild"],
-                    Description = "Rebuild a profile with. If the manifest file is not up to date, the project will be rebuilt. Otherwise, the profile will not be modified.",
+                    Arguments = ["profile-name"],
+                    Description = "Rebuild a profile if the manifest file is not up to date.",
                     Function = CmdRebuildProfile,
                 }
             ];
@@ -189,18 +189,14 @@ namespace MagickCowModManager.Core.Args
 
         void CmdApplyProfile(string[] args, int index)
         {
-            if (cmdvar_ApplyProfile)
-                throw new Exception("Cannot apply multiple profiles in a single call!");
-            cmdvar_ApplyProfile = true;
-            cmdvar_Profile = args[index + 1];
+            string profileName = args[index + 1];
+            cmdvar_ProfilesToApply.Add(profileName);
         }
 
         void CmdRebuildProfile(string[] args, int index)
         {
-            if (cmdvar_ApplyProfile)
-                throw new Exception("Cannot apply multiple profiles in a single call!");
-            cmdvar_ApplyProfile = true;
-            cmdvar_Profile = args[index + 1];
+            string profileName = args[index + 1];
+            cmdvar_ProfilesToRebuild.Add(profileName);
             // TODO : Implement rebuild logic here
         }
 
@@ -234,9 +230,12 @@ namespace MagickCowModManager.Core.Args
             if (cmdvar_ListProfiles)
                 ModManager.ListProfiles();
 
-            // Apply profile if required
-            if (cmdvar_ApplyProfile)
-                ModManager.ApplyProfile(cmdvar_Profile);
+            // Apply profiles
+            foreach (var profile in cmdvar_ProfilesToApply)
+                ModManager.ApplyProfile(profile);
+
+            // Rebuild profiles
+            // TODO : Implement
         }
     }
 }
