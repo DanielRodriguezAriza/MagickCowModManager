@@ -77,7 +77,7 @@ namespace MagickCowModManager.Core
 
         #endregion
 
-        #region ApllyProfile
+        #region ApplyProfile
 
         public void ApplyProfile(string profileDir)
         {
