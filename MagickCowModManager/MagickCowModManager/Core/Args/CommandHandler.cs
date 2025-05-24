@@ -233,6 +233,7 @@ namespace MagickCowModManager.Core.Args
             // Apply profiles
             foreach (var profile in cmdvar_ProfilesToApply)
                 ModManager.ApplyProfile(profile);
+            cmdvar_ProfilesToApply.Clear();
 
             // Rebuild profiles
             // TODO : Implement
