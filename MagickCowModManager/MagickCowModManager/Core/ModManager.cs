@@ -70,6 +70,11 @@ namespace MagickCowModManager.Core
             return PathIsValidInstalls() && PathIsValidMods() && PathIsValidProfiles();
         }
 
+        public bool DoesProfileManifestExist(string profileDirName)
+        {
+            return File.Exists(Path.Combine(this.PathProfiles, profileDirName, "manifest"));
+        }
+
         #endregion
 
         #region ApllyProfile
