@@ -160,6 +160,7 @@ namespace MagickCowModManager.Core.Args
         {
             if (cmdvar_SetPathToInstalls)
                 throw new Exception("Path to installs cannot be set more than once in a single call!");
+            cmdvar_SetPathToInstalls = true;
             cmdvar_PathToInstalls = args[index + 1];
         }
 
@@ -167,6 +168,7 @@ namespace MagickCowModManager.Core.Args
         {
             if (cmdvar_SetPathToMods)
                 throw new Exception("Path to mods cannot be set more than once in a single call!");
+            cmdvar_SetPathToMods = true;
             cmdvar_PathToMods = args[index + 1];
         }
 
@@ -174,6 +176,7 @@ namespace MagickCowModManager.Core.Args
         {
             if (cmdvar_SetPathToProfiles)
                 throw new Exception("Path to profiles cannot be set more than once in a single call!");
+            cmdvar_SetPathToProfiles = true;
             cmdvar_PathToProfiles = args[index + 1];
         }
 
