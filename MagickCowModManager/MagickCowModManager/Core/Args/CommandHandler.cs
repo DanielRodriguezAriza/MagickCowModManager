@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagickCowModManager.Core.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -34,6 +35,9 @@ namespace MagickCowModManager.Core.Args
 
         private List<string> cmdvar_ProfilesToApply;
         private List<string> cmdvar_ProfilesToRebuild;
+
+        private bool cmdvar_FileHandlingModeSet;
+        private FileHandlingMode cmdvar_FileHandlingMode;
 
         #endregion
 
@@ -116,7 +120,15 @@ namespace MagickCowModManager.Core.Args
                     Arguments = ["profile-name"],
                     Description = "Rebuild a profile if the manifest file is not up to date.",
                     Function = CmdRebuildProfile,
-                }
+                },
+                new Command
+                {
+                    ShortCommand = "fhm",
+                    LongCommand = "file-handling-mode",
+                    Arguments = ["mode"],
+                    Description = "Set the file handling mode for profile building. Options are \"hardlink\", \"symlink\" and \"copy\".",
+                    Function = CmdFileHandlingMode,
+                },
             ];
 
             //Initialize cmdvar_ variables
@@ -224,6 +236,37 @@ namespace MagickCowModManager.Core.Args
 
         #endregion
 
+        #region CmdFileHandlingMode
+
+        void CmdFileHandlingMode(string[] args, int index)
+        {
+            if (cmdvar_FileHandlingModeSet)
+                throw new Exception("File Handling Mode cannot be set more than once in a single call!");
+
+            string modeStr = args[index + 1];
+            FileHandlingMode modeAux;
+
+            switch (modeStr)
+            {
+                case "hardlink":
+                    modeAux = FileHandlingMode.HardLink;
+                    break;
+                case "symlink":
+                    modeAux = FileHandlingMode.SymbolicLink;
+                    break;
+                case "copy":
+                    modeAux = FileHandlingMode.Copy;
+                    break;
+                default:
+                    throw new Exception($"Unknown File Handling Mode \"{modeStr}\"");
+            }
+
+            cmdvar_FileHandlingMode = modeAux;
+            cmdvar_FileHandlingModeSet = true;
+        }
+
+        #endregion
+
         private void Print(string msg)
         {
             Console.WriteLine(msg);
@@ -237,12 +280,16 @@ namespace MagickCowModManager.Core.Args
                 return;
 
             // Set the path variables if required
-            if(cmdvar_SetPathToInstalls)
+            if (cmdvar_SetPathToInstalls)
                 ModManager.PathInstalls = cmdvar_PathToInstalls;
-            if(cmdvar_SetPathToMods)
+            if (cmdvar_SetPathToMods)
                 ModManager.PathMods = cmdvar_PathToMods;
-            if(cmdvar_SetPathToProfiles)
+            if (cmdvar_SetPathToProfiles)
                 ModManager.PathProfiles = cmdvar_PathToProfiles;
+
+            // Set the file handling mode if required
+            if (cmdvar_FileHandlingModeSet)
+                ModManager.FileHandlingMode = cmdvar_FileHandlingMode;
 
             // Execute list commands if required
             if (cmdvar_ListInstalls)
