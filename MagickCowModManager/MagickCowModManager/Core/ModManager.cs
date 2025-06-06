@@ -24,21 +24,24 @@ namespace MagickCowModManager.Core
         public string PathMods { get; set; } // Path where the mod files are located
         public string PathProfiles { get; set; } // Path where the profiles are located
 
+        public FileHandlingMode FileHandlingMode { get; set; } // The mode with which the files will be handled when installing profiles
+
         #endregion
 
         #region Constructors
 
         // Constructor that allows the user to specify the paths for the installs, mods and profiles directories manually
-        public ModManager(string pathInstalls, string pathMods, string pathProfiles)
+        public ModManager(string pathInstalls, string pathMods, string pathProfiles, FileHandlingMode fileHandlingMode = FileHandlingMode.HardLink)
         {
             this.PathInstalls = pathInstalls;
             this.PathMods = pathMods;
             this.PathProfiles = pathProfiles;
+            this.FileHandlingMode = fileHandlingMode;
         }
 
         // Constructor that allows the user to specify the path where the mod manager data is located
         public ModManager(string path)
-        : this(Path.Combine(path, "installs"), Path.Combine(path, "mods"), Path.Combine(path, "profiles"))
+        : this(Path.Combine(path, "installs"), Path.Combine(path, "mods"), Path.Combine(path, "profiles"), FileHandlingMode.HardLink)
         { }
 
         // Constructor that allows the user to directly assume that the current working directory is where the mod manager data is located
@@ -81,10 +84,10 @@ namespace MagickCowModManager.Core
 
         public void ApplyProfile(string profileDir, bool forceRebuild = true)
         {
-            ApplyProfile(PathInstalls, PathMods, PathProfiles, profileDir, true, forceRebuild);
+            ApplyProfile(PathInstalls, PathMods, PathProfiles, FileHandlingMode, profileDir, true, forceRebuild);
         }
 
-        public void ApplyProfile(string pathToInstalls, string pathToMods, string pathToProfiles, string profileDir, bool handleManifest, bool forceRebuild)
+        public void ApplyProfile(string pathToInstalls, string pathToMods, string pathToProfiles, FileHandlingMode fileHandlingMode, string profileDir, bool handleManifest, bool forceRebuild)
         {
             // Debug log
             Console.WriteLine($"Installing Profile from directory \"{profileDir}\"");
@@ -139,7 +142,7 @@ namespace MagickCowModManager.Core
 
             // Generate the new game files and manifest
             Console.WriteLine($"    - Generating files for profile named \"{profileInfo.Name}\" from directory \"{profileDir}\"");
-            CreateGameFiles(pathToInstalls, pathToMods, pathToProfileGameDir, profileInfo);
+            CreateGameFiles(pathToInstalls, pathToMods, pathToProfileGameDir, fileHandlingMode, profileInfo);
             if(handleManifest)
                 CreateManifest(pathToProfileManifest);
         }
@@ -154,14 +157,14 @@ namespace MagickCowModManager.Core
             File.Delete(path);
         }
 
-        private void CreateGameFiles(string pathToInstalls, string pathToMods, string pathToProfileGameDir, ProfileInfo profileInfo)
+        private void CreateGameFiles(string pathToInstalls, string pathToMods, string pathToProfileGameDir, FileHandlingMode fileHandlingMode, ProfileInfo profileInfo)
         {
             // Create the directory if it does not exist already
             if (!Directory.Exists(pathToProfileGameDir))
                 Directory.CreateDirectory(pathToProfileGameDir);
 
             // Copy the base install
-            FileSystemUtil.CopyDirectory(Path.Combine(pathToInstalls, profileInfo.Install), pathToProfileGameDir);
+            FileSystemUtil.CopyDirectory(Path.Combine(pathToInstalls, profileInfo.Install), pathToProfileGameDir, fileHandlingMode);
 
             // Copy all of the mod files
             // NOTE : Reverse order iteration for easy mod overriding implementation
