@@ -204,11 +204,16 @@ namespace MagickCowModManager.Core
             
             if(!directory.Exists)
             {
-                Logger.Log(1, $"directories-not-found:{name}", Array.Empty<string>());
+                // Logger.Log(1, $"directories-not-found:{name}", Array.Empty<string>());
+                Console.WriteLine($"Directory not found : \"{name}\"");
                 return;
             }
 
-            Logger.Log(0, $"directories-found:{name}", FileSystemUtil.GetChildDirectoriesName(directory));
+            // Logger.Log(0, $"directories-found:{name}", FileSystemUtil.GetChildDirectoriesName(directory));
+            Console.WriteLine($"Directory found: \"{name}\"");
+            var dirs = FileSystemUtil.GetChildDirectoriesName(directory);
+            foreach (var dir in dirs)
+                Console.WriteLine($" - {dir}");
         }
 
         #endregion
