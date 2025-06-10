@@ -173,6 +173,12 @@ namespace MagickCowModManager.Core
             // Copy the base install
             // NOTE : We apply the install at the end for easy file overriding implementation
             FileSystemUtil.CopyDirectory(Path.Combine(pathToInstalls, profileInfo.Install), pathToProfileGameDir, fileHandlingMode);
+
+            // NOTE : The file overriding stuff requires applying mods and install in reverse order. This is because to implement overriding, rather than
+            // overwriting files and needlessly copying the same files in different mods and installs over and over, we instead only generate files if
+            // they were NOT already on the destination path. This means that to simulate overriding, we just need to load stuff in reverse order, since the
+            // last file to be loaded would be the one to override all previous ones, which means that loading it first will ensure that its files are the first
+            // to be generated, while all the other files are simply ignored.
         }
 
         private void DeleteGameFiles(string dir)
