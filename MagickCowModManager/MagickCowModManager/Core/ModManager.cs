@@ -163,15 +163,16 @@ namespace MagickCowModManager.Core
             if (!Directory.Exists(pathToProfileGameDir))
                 Directory.CreateDirectory(pathToProfileGameDir);
 
-            // Copy the base install
-            FileSystemUtil.CopyDirectory(Path.Combine(pathToInstalls, profileInfo.Install), pathToProfileGameDir, fileHandlingMode);
-
             // Copy all of the mod files
             // NOTE : Reverse order iteration for easy mod overriding implementation
             foreach (var mod in profileInfo.Mods.Reverse())
             {
                 FileSystemUtil.CopyDirectory(Path.Combine(pathToMods, mod), pathToProfileGameDir);
             }
+
+            // Copy the base install
+            // NOTE : We apply the install at the end for easy file overriding implementation
+            FileSystemUtil.CopyDirectory(Path.Combine(pathToInstalls, profileInfo.Install), pathToProfileGameDir, fileHandlingMode);
         }
 
         private void DeleteGameFiles(string dir)
