@@ -230,7 +230,7 @@ namespace MagickCowModManager.Core.IO
                 }
                 else
                 {
-                    throw new NotImplementedException("Hard Link usage is not implemented yet on the current platform!)");
+                    throw new NotImplementedException("Hard Link usage is not implemented yet on the current platform!");
                 }
             }
 
