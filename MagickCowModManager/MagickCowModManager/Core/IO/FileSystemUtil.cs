@@ -268,8 +268,9 @@ namespace MagickCowModManager.Core.IO
 
             private static class UnixHelper
             {
-                // Linux API for creating hard links.
-                // Also works for macOS, but I think I need to use hunlink() to remove directories and files that are hard linked... not sure about that tho...
+                // POSIX API for creating hard links.
+                // Works for POSIX compliant systems (Linux, macOS, etc...)
+                // but I think that for macOS I need to use hunlink() to remove directories and files that are hard linked... not sure about that tho... I don't have a macOS system so I cannot test this.
                 [DllImport("libc", SetLastError = true)]
                 private static extern int link(string oldpath, string newpath);
 
