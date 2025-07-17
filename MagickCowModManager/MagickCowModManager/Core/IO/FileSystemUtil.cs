@@ -159,25 +159,22 @@ namespace MagickCowModManager.Core.IO
                 DeleteDirectory(child);
             }
 
-            // The ".preserve" file indicates that the current directory is to be preserved
+            // The ".preserve" file indicates that the current directory is to be preserved, so we bail out
+            // and don't delete anything.
             bool shouldPreserve = File.Exists(Path.Combine(path.FullName, ".preserve"));
             if (shouldPreserve)
             {
                 return;
             }
 
-            // Directory.Delete() calls in C# only delete if the directory is empty, but just in case this
-            // behaviour is not preserved in future updates, we add our own check first, just to be sure
-            var childDirsLatest = path.GetDirectories();
-            var childFilesLatest = path.GetFiles();
-            bool anyChildrenLeft = childDirsLatest.Length > 0 || childFilesLatest.Length > 0;
-            if (anyChildrenLeft)
+            // Delete all of the child files within the current directory.
+            var childFiles = path.GetFiles();
+            foreach (var file in childFiles)
             {
-                // If any children are left on the directory, we can't delete it, because that means
-                // that at least one of the children on this directory structure has a ".preserve" file present with it.
-                return;
+                File.Delete(file.FullName);
             }
 
+            // Delete the current directory itself.
             Directory.Delete(path.FullName);
         }
 
